@@ -68,6 +68,32 @@ class ShoppingCart:
             return self.items[i]
 
 # TODO: order parts/vehicles from vendor
+from mysql.connector import connect
+
+host = "localhost"
+user = "root"
+password = "password"
+port = 3306
+
+
+def update_from_vendor(quantity: int, product_name: str):
+    # Create connection
+    with connect(host=host, user=user, password=password, port=port) as mysql_connection_object:
+        # Create cursor
+        with mysql_connection_object.cursor() as mysql_cursor:
+            # Create SQL statement
+            update_statement = f"""USE generic_vehicle_merchant;"""
+            update_statement2 = f"""UPDATE products
+                                    SET quantity = {quantity}
+                                    WHERE product_name = '{product_name}';"""
+            # Execute the statement
+            mysql_cursor.execute(update_statement)
+            mysql_cursor.execute(update_statement2)
+            # Commit the change
+            mysql_connection_object.commit()
+
+
+print(update_from_vendor(12, "bord_t502"))
 
 # TODO: list all products function
 
