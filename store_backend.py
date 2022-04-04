@@ -3,11 +3,11 @@ This file is for all of our functions and classes
 All of the math etc done on the backend
 """
 
-# TODO: -enter user_details(username n password),
-#  -order parts or products from the vendor
-#  -add or remove product from cart
-#  -invoice creation
-#  -input customer data (for new customer)
+from mysql.connector import connect
+
+HOST = "localhost"
+USER = "root"
+PASS = "pass"  # DON'T SAVE YOUR PASSWORD TO GIT, MAKE SURE YOU REMOVE IT BEFORE PUSHING
 
 
 def login_details(username, password):
@@ -16,3 +16,20 @@ def login_details(username, password):
     else:
         # TODO: make this connect to sql database
         pass
+
+# TODO: create a "add new customer"
+
+# TODO: list all active users from the past month
+
+# TODO: make a shopping cart
+#   -functionality to add/remove items
+#   -track user id or name within the order
+
+# TODO: order parts/vehicles from vendor
+
+# TODO: list all products function
+
+# TODO: list all out-of-stock products function
+
+# TODO: create a finalize order
+#   -also create invoice when order is finalized
