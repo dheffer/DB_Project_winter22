@@ -5,11 +5,14 @@ Our version of our own DBMS
 import tkinter as tk
 from tkinter import ttk
 
-# TODO: -area to enter username and password,
-#  -area to place an order from a vendor
-#  -add or remove product from cart
-#  -invoice creation on sale
-#  -area to input customer data (for new customer)
+# TODO: -user sign in area
+#   - add new customer details area
+#   - button to list active users in past month
+#   - shopping cart area, with add/remove features (track user id/name as well)
+#   - area to order parts/vehicles from vendor
+#   - button to list all products from store
+#   - button to list everything out of stock
+#   - finalize order button
 
 # create the root window
 root = tk.Tk()
