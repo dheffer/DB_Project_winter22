@@ -26,6 +26,7 @@ product_name VARCHAR(30) NOT NULL,
 vehicle VARCHAR(20),
 cost FLOAT NOT NULL,
 vendor_id INT,
+quantity INT,
 FOREIGN KEY (vendor_id) REFERENCES vendor(vendor_id));
 
 CREATE TABLE orders(
@@ -65,22 +66,22 @@ VALUES ("Auto-Parts Incorporated", "management@autoparts.inc", 13444777443);
 INSERT INTO vendor(vendor_name, vendor_email, vendor_phone)
 VALUES ("Bord Vehicles", "gregmerc@bordvehicles.com", 14764331555);
 
-INSERT INTO products(product_name, vehicle, cost, vendor_id)
-VALUES ("bord_t502", "Bord T502", 65000.00, 2);
-INSERT INTO products(product_name, vehicle, cost, vendor_id)
-VALUES ("bord_t501", "Bord T501", 48000.00, 2);
-INSERT INTO products(product_name, vehicle, cost, vendor_id)
-VALUES ("bord_t1100", "Bord T1101", 83500.00, 2);
-INSERT INTO products(product_name, vehicle, cost, vendor_id)
-VALUES ("bord_t1100_engine", "BT1101 Engine", 2400.00, 2);
-INSERT INTO products(product_name, vehicle, cost, vendor_id)
-VALUES ("auto_tire01", "TruckWinterTire", 700.00, 1);
-INSERT INTO products(product_name, vehicle, cost, vendor_id)
-VALUES ("auto_tire02", "TruckSummerTire", 550.00, 1);
-INSERT INTO products(product_name, vehicle, cost, vendor_id)
-VALUES ("auto_tire03", "CarWinterTire", 610.00, 1);
-INSERT INTO products(product_name, vehicle, cost, vendor_id)
-VALUES ("auto_air_pump", "WheelPump", 75.00, 1);
+INSERT INTO products(product_name, vehicle, cost, vendor_id, quantity)
+VALUES ("bord_t502", "Bord T502", 65000.00, 2, 10);
+INSERT INTO products(product_name, vehicle, cost, vendor_id, quantity)
+VALUES ("bord_t501", "Bord T501", 48000.00, 2, 10);
+INSERT INTO products(product_name, vehicle, cost, vendor_id, quantity)
+VALUES ("bord_t1100", "Bord T1101", 83500.00, 2, 10);
+INSERT INTO products(product_name, vehicle, cost, vendor_id, quantity)
+VALUES ("bord_t1100_engine", "BT1101 Engine", 2400.00, 2, 10);
+INSERT INTO products(product_name, vehicle, cost, vendor_id, quantity)
+VALUES ("auto_tire01", "TruckWinterTire", 700.00, 1, 10);
+INSERT INTO products(product_name, vehicle, cost, vendor_id, quantity)
+VALUES ("auto_tire02", "TruckSummerTire", 550.00, 1, 10);
+INSERT INTO products(product_name, vehicle, cost, vendor_id, quantity)
+VALUES ("auto_tire03", "CarWinterTire", 610.00, 1, 10);
+INSERT INTO products(product_name, vehicle, cost, vendor_id, quantity)
+VALUES ("auto_air_pump", "WheelPump", 75.00, 1, 10);
 
 select * from customer;
 select * from store;
