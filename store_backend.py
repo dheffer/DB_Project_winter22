@@ -16,6 +16,7 @@ def login_details(username, password):
     else:
         pass
 
+
 # TODO: create a "add new customer"
 
 # TODO: list all active users from the past month
@@ -69,10 +70,11 @@ class ShoppingCart:
 
 # TODO: order parts/vehicles from vendor
 
-
+# TODO: order parts/vehicles from vendor
 def update_from_vendor(quantity: int, product_name: str):
     # Create connection
     with connect(host=HOST, user=USER, password=PASS) as mysql_connection_object:
+
         # Create cursor
         with mysql_connection_object.cursor() as mysql_cursor:
             # Create SQL statement
@@ -89,8 +91,28 @@ def update_from_vendor(quantity: int, product_name: str):
 
 print(update_from_vendor(12, "bord_t502"))
 
-# TODO: list all products function
 
+# TODO: list all products function
+def get_all_products():
+    # Create connection
+    with connect(host=host, user=user, password=password) as mysql_connection_object:
+        # Create cursor
+        with mysql_connection_object.cursor() as mysql_cursor:
+            # Create SQL statement
+            update_statement = f"""USE generic_vehicle_merchant;"""
+            update_statement2 = f"""SELECT product_name
+                                    FROM `generic_vehicle_merchant`.`products`;"""
+            # Execute the statement
+            mysql_cursor.execute(update_statement)
+            mysql_cursor.execute(update_statement2)
+            for row in mysql_cursor:
+                print(row)
+            # Commit the change
+            mysql_connection_object.commit()
+
+print(get_all_products())
+
+# TODO: list all out-of-stock products function
 
 def list_out_of_stock_products():
     """
@@ -99,14 +121,14 @@ def list_out_of_stock_products():
     """
     # TODO: incorporate with GUI
     with connect(host=HOST, user=USER, password=PASS) as mysql_connection:
-        with mysql_connection.cursor() as cursor:
+        with mysql_connection.cursor() as mysql_cursor:
             access_database = "USE generic_vehicle_merchant;"
             query = f"""SELECT * FROM products
                 WHERE quantity = {10}
                 """
-            cursor.execute(access_database)
-            cursor.execute(query)
-            out_of_stock = cursor.fetchall()
+            mysql_cursor.execute(access_database)
+            mysql_cursor.execute(query)
+            out_of_stock = mysql_cursor.fetchall()
             list_of_no_stock = []
             for no_stock in out_of_stock:
                 list_of_no_stock.append(no_stock[0:5])
