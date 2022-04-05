@@ -68,17 +68,11 @@ class ShoppingCart:
             return self.items[i]
 
 # TODO: order parts/vehicles from vendor
-from mysql.connector import connect
-
-host = "localhost"
-user = "root"
-password = "password"
-port = 3306
 
 
 def update_from_vendor(quantity: int, product_name: str):
     # Create connection
-    with connect(host=host, user=user, password=password, port=port) as mysql_connection_object:
+    with connect(host=HOST, user=USER, password=PASS) as mysql_connection_object:
         # Create cursor
         with mysql_connection_object.cursor() as mysql_cursor:
             # Create SQL statement
