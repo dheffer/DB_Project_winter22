@@ -16,6 +16,7 @@ def login_details(username, password):
     else:
         pass
 
+
 # TODO: create a "add new customer"
 
 # TODO: list all active users from the past month
@@ -67,18 +68,11 @@ class ShoppingCart:
         for i in self.items:
             return self.items[i]
 
+
 # TODO: order parts/vehicles from vendor
-from mysql.connector import connect
-
-host = "localhost"
-user = "root"
-password = "password"
-port = 3306
-
-
 def update_from_vendor(quantity: int, product_name: str):
     # Create connection
-    with connect(host=host, user=user, password=password, port=port) as mysql_connection_object:
+    with connect(host=host, user=user, password=password) as mysql_connection_object:
         # Create cursor
         with mysql_connection_object.cursor() as mysql_cursor:
             # Create SQL statement
@@ -95,7 +89,27 @@ def update_from_vendor(quantity: int, product_name: str):
 
 print(update_from_vendor(12, "bord_t502"))
 
+
 # TODO: list all products function
+def get_all_products():
+    # Create connection
+    with connect(host=host, user=user, password=password) as mysql_connection_object:
+        # Create cursor
+        with mysql_connection_object.cursor() as mysql_cursor:
+            # Create SQL statement
+            update_statement = f"""USE generic_vehicle_merchant;"""
+            update_statement2 = f"""SELECT product_name
+                                    FROM `generic_vehicle_merchant`.`products`;"""
+            # Execute the statement
+            mysql_cursor.execute(update_statement)
+            mysql_cursor.execute(update_statement2)
+            for row in mysql_cursor:
+                print(row)
+            # Commit the change
+            mysql_connection_object.commit()
+
+print(get_all_products())
+
 
 # TODO: list all out-of-stock products function
 
