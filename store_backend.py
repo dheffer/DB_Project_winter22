@@ -112,6 +112,25 @@ print(get_all_products())
 
 
 # TODO: list all out-of-stock products function
+def list_out_of_stock_products():
+    """
+    :return: returns a list of all out of stock products, useful to
+     know when to order more
+    """
+    # TODO: incorporate with GUI
+    with connect(host=HOST, user=USER, password=PASS) as mysql_connection:
+        with mysql_connection.cursor() as cursor:
+            access_database = "USE generic_vehicle_merchant;"
+            query = f"""SELECT * FROM products
+                WHERE quantity = {10}
+                """
+            cursor.execute(access_database)
+            cursor.execute(query)
+            out_of_stock = cursor.fetchall()
+            list_of_no_stock = []
+            for no_stock in out_of_stock:
+                list_of_no_stock.append(no_stock[0:5])
+    return list_of_no_stock
 
 # TODO: create a finalize order
 #   -also create invoice when order is finalized
