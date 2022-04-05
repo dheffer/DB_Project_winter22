@@ -7,7 +7,7 @@ from mysql.connector import connect
 
 HOST = "localhost"
 USER = "root"
-PASS = "chimoCOCOsQl1202"  # DON'T SAVE YOUR PASSWORD TO GIT, MAKE SURE YOU REMOVE IT BEFORE PUSHING
+PASS = "pass"  # DON'T SAVE YOUR PASSWORD TO GIT, MAKE SURE YOU REMOVE IT BEFORE PUSHING
 
 
 def login_details(username, password):
