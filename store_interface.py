@@ -20,14 +20,35 @@ from tkinter import ttk
 def submit_action():
     name = string_user_name.get()
     password = string_user_password.get()
-    if password == 'greghard0001' and name == 'AA0001':
+    if name == 'AA0001' and password == 'greghard0001':
         string_message.set('Successful Login')
+        shop_win()
     else:
         string_message.set('Incorrect Login Credentials')
 
+def shop_win():
+    root2 = tk.Tk()
+    root2.title('Shop')
+    root2.geometry('800x600')
+    frame_home2 = ttk.Frame(root2)
+    frame_home2.pack(fill=tk.BOTH, expand=True)
+    ttk.Label(frame_home2, text="Product 1").grid(column=0, row=0)
+    ttk.Label(frame_home2, text="Product 2").grid(column=1, row=0)
+    ttk.Label(frame_home2, text="Product 3").grid(column=2, row=0)
+    ttk.Label(frame_home2, text="Product 4").grid(column=3, row=0)
+    ttk.Button(frame_home2, text='+').grid(column=0, row=1, columnspan=1)
+    ttk.Button(frame_home2, text='-').grid(column=0, row=2, columnspan=1)
+    ttk.Button(frame_home2, text='+').grid(column=1, row=1, columnspan=1)
+    ttk.Button(frame_home2, text='-').grid(column=1, row=2, columnspan=1)
+    ttk.Button(frame_home2, text='+').grid(column=2, row=1, columnspan=1)
+    ttk.Button(frame_home2, text='-').grid(column=2, row=2, columnspan=1)
+    ttk.Button(frame_home2, text='+').grid(column=3, row=1, columnspan=1)
+    ttk.Button(frame_home2, text='-').grid(column=3, row=2, columnspan=1)
+    root2.mainloop()
+
 root = tk.Tk()
 root.title('Generic Vehicle Merchant Software')
-root.geometry('600x200')
+root.geometry('300x100')
 
 frame_home = ttk.Frame(root)
 frame_home.pack(fill=tk.BOTH, expand=True)
