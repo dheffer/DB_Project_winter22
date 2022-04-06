@@ -9,18 +9,29 @@ HOST = "localhost"
 USER = "root"
 PASS = "pass"  # DON'T SAVE YOUR PASSWORD TO GIT, MAKE SURE YOU REMOVE IT BEFORE PUSHING
 
-
-def login_details(username, password):
+# thing below was a test; might use later
+"""def login_details(username, password):
     if (username != "AA0001") or (password != "greghard0001"):
         raise ValueError("Your login details were incorrect. Please try again.")
     else:
-        pass
+        pass"""
 
 
 # TODO: create a "add new customer"
+def add_new_customer(name, email, address, phone, vehic_license):
+    with connect(host=HOST, user=USER, password=PASS) as mysql_connection:
+        with mysql_connection.cursor() as cursor:
+            access_database = "USE generic_vehicle_merchant;"
+            query = f"""INSERT INTO customer(
+            cust_name, cust_email, cust_address, cust_phone, cust_license)
+            VALUES ("{name}", "{email}", "{address}", {phone}, {vehic_license});"""
+            cursor.execute(access_database)
+            cursor.execute(query)
+            mysql_connection.commit()
+            # TODO: make it so if a name, email, etc are in the database
+            #  then don't add the customer again?
 
 # TODO: list all active users from the past month
-
 
 class ShoppingCart:
     # TODO: incorporate with the GUI
@@ -40,7 +51,7 @@ class ShoppingCart:
             raise ValueError("Must be greater than 0")
 
         if item_name not in self.items.keys():
-            self.items[item_name] = [quantity, cost]
+            self.items.update({item_name: [quantity, cost]})
         else:
             return
 
@@ -64,13 +75,14 @@ class ShoppingCart:
             self.items[item_name][0] = modified
 
     def get_total_cost(self):
-        # TODO: make total cost actually work
+        maths = 0
         for i in self.items:
-            return self.items[i]
+            maths += float(self.items[i][0]) * float(self.items[i][1])
+        return round(maths, 2)
+
 
 # TODO: order parts/vehicles from vendor
-
-# TODO: order parts/vehicles from vendor
+#  unsure if this is finished, please update if not, else delete this to-do thing
 def update_from_vendor(quantity: int, product_name: str):
     # Create connection
     with connect(host=HOST, user=USER, password=PASS) as mysql_connection_object:
@@ -89,13 +101,9 @@ def update_from_vendor(quantity: int, product_name: str):
             mysql_connection_object.commit()
 
 
-print(update_from_vendor(12, "bord_t502"))
-
-
-# TODO: list all products function
 def get_all_products():
     # Create connection
-    with connect(host=host, user=user, password=password) as mysql_connection_object:
+    with connect(host=HOST, user=USER, password=PASS) as mysql_connection_object:
         # Create cursor
         with mysql_connection_object.cursor() as mysql_cursor:
             # Create SQL statement
@@ -110,9 +118,9 @@ def get_all_products():
             # Commit the change
             mysql_connection_object.commit()
 
+
 print(get_all_products())
 
-# TODO: list all out-of-stock products function
 
 def list_out_of_stock_products():
     """
@@ -137,14 +145,24 @@ def list_out_of_stock_products():
 
 # TODO: create a finalize order
 #   -also create invoice when order is finalized
+#   -will need to reference ShoppingCart class to remove items from database
 
 
+"""
+TEST CASES FOR CODE BELOW
+"""
 s1 = ShoppingCart()
 s1.add_item("cookies", 4, 5.00)
 s1.add_item("bread", 12, 8.40)
+print("-" * 50)
 print(s1.items)
+print(s1.get_total_cost())
+print(s1.items.keys())
+print(s1.items.get("bread"))
+print("-" * 50)
 s1.remove_item("cookies", 2)
 s1.remove_item("bread", 12)
 print(s1.items)
+print(s1.get_total_cost())
 
 print(list_out_of_stock_products())
