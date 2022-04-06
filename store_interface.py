@@ -15,20 +15,22 @@ Our version of our own DBMS
 # create the root window
 import tkinter as tk
 from tkinter import ttk
+from store_backend import *
 
 
 def submit_action():
     name = string_user_name.get()
     password = string_user_password.get()
-    if name == 'AA0001' and password == 'greghard0001':
+    if name == '1' and password == '123':
         string_message.set('Successful Login')
         shop_win()
     else:
         string_message.set('Incorrect Login Credentials')
 
+
 def shop_win():
     root2 = tk.Tk()
-    root2.title('Shop')
+    root2.title('Generic Vehicle Merchant Software')
     root2.geometry('800x600')
     frame_home2 = ttk.Frame(root2)
     frame_home2.pack(fill=tk.BOTH, expand=True)
@@ -44,12 +46,55 @@ def shop_win():
     ttk.Button(frame_home2, text='-').grid(column=2, row=2, columnspan=1)
     ttk.Button(frame_home2, text='+').grid(column=3, row=1, columnspan=1)
     ttk.Button(frame_home2, text='-').grid(column=3, row=2, columnspan=1)
-    root2.geometry('500x400')
+
+    """     
+    Below: Adding Customer to Database
+    """
+    customer_info_frame = ttk.Frame(root2, width=80, height=100)
+    customer_info_frame.pack(fill=tk.BOTH, expand=True)
+    ttk.Label(customer_info_frame, text="Add Customer to Database").grid(column=1, row=0)
+
+    ttk.Label(customer_info_frame, text="Customer Name: ").grid(column=0, row=1, sticky="w")
+    cust_name = tk.StringVar()
+    ttk.Entry(customer_info_frame, width=40, textvariable=cust_name).grid(column=1, row=1)
+
+    ttk.Label(customer_info_frame, text="Cust. Email: ").grid(column=0, row=2, sticky="w")
+    cust_email = tk.StringVar()
+    ttk.Entry(customer_info_frame, width=40, textvariable=cust_email).grid(column=1, row=2)
+
+    ttk.Label(customer_info_frame, text="Cust. Address: ").grid(column=0, row=3, sticky="w")
+    cust_address = tk.StringVar()
+    ttk.Entry(customer_info_frame, width=40, textvariable=cust_address).grid(column=1, row=3)
+
+    ttk.Label(customer_info_frame, text="Cust. Phone #: ").grid(column=0, row=4, sticky="w")
+    cust_phone = tk.StringVar()
+    ttk.Entry(customer_info_frame, width=40, textvariable=cust_phone).grid(column=1, row=4)
+
+    ttk.Label(customer_info_frame, text="Cust. License #: ").grid(column=0, row=5, sticky="w")
+    cust_license = tk.StringVar()
+    ttk.Entry(customer_info_frame, width=40, textvariable=cust_license).grid(column=1, row=5)
+
+    def add_cust_function():
+        c_name = cust_name.get(),
+        c_email = cust_email.get()
+        c_address = cust_address.get()
+        c_phone = cust_phone.get()
+        c_license = cust_license.get()
+        add_new_customer(name=c_name,
+                         email=c_email,
+                         address=c_address,
+                         phone=c_phone,
+                         vehic_license=c_license)
+
+    ttk.Button(customer_info_frame,
+               text="SUBMIT",
+               command=add_cust_function).grid(column=1, row=6)
 
     root2.mainloop()
 
+
 root = tk.Tk()
-root.title('Generic Vehicle Merchant Software')
+root.title('GVM Login')
 root.geometry('300x100')
 
 frame_home = ttk.Frame(root)
@@ -67,6 +112,6 @@ ttk.Entry(frame_home, width=30, textvariable=string_user_password).grid(column=1
 string_message = tk.StringVar()
 ttk.Entry(frame_home, width=30, textvariable=string_message).grid(column=1, row=3, columnspan=2)
 
-ttk.Button(frame_home, text='submit', command=submit_action).grid(column=1, row=2, columnspan=2)
+ttk.Button(frame_home, text='SUBMIT', command=submit_action).grid(column=1, row=2, columnspan=2)
 
 root.mainloop()

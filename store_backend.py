@@ -4,10 +4,11 @@ All of the math etc done on the backend
 """
 
 from mysql.connector import connect
+from tkinter import messagebox as msgb
 
 HOST = "localhost"
 USER = "root"
-PASS = "pass"  # DON'T SAVE YOUR PASSWORD TO GIT, MAKE SURE YOU REMOVE IT BEFORE PUSHING
+PASS = "chimoCOCOsQl1202"  # DON'T SAVE YOUR PASSWORD TO GIT, MAKE SURE YOU REMOVE IT BEFORE PUSHING
 
 # thing below was a test; might use later
 """def login_details(username, password):
@@ -22,14 +23,18 @@ def add_new_customer(name, email, address, phone, vehic_license):
     with connect(host=HOST, user=USER, password=PASS) as mysql_connection:
         with mysql_connection.cursor() as cursor:
             access_database = "USE generic_vehicle_merchant;"
-            query = f"""INSERT INTO customer(
-            cust_name, cust_email, cust_address, cust_phone, cust_license)
+            query = f"""INSERT INTO customer(cust_name, cust_email, cust_address, cust_phone, cust_license)
             VALUES ("{name}", "{email}", "{address}", {phone}, {vehic_license});"""
             cursor.execute(access_database)
             cursor.execute(query)
             mysql_connection.commit()
+            msgb.showinfo(f"{name} added to database")
             # TODO: make it so if a name, email, etc are in the database
             #  then don't add the customer again?
+"""
+^^^^ FUNCTION WORKS BUT DOESNT WORK IN GUI SECTION ^^^^
+"""
+
 
 # TODO: list all active users from the past month
 
