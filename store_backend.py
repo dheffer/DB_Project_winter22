@@ -21,6 +21,7 @@ def login_details(username, password):
 # TODO: list all active users from the past month
 
 
+# ShoppingCart Class is finished; if improvements can be made feel free
 class ShoppingCart:
     # TODO: incorporate with the GUI
     def __init__(self):
@@ -39,7 +40,7 @@ class ShoppingCart:
             raise ValueError("Must be greater than 0")
 
         if item_name not in self.items.keys():
-            self.items[item_name] = [quantity, cost]
+            self.items.update({item_name: [quantity, cost]})
         else:
             return
 
@@ -64,12 +65,14 @@ class ShoppingCart:
 
     def get_total_cost(self):
         # TODO: make total cost actually work
+        maths = 0
         for i in self.items:
-            return self.items[i]
+            maths += float(self.items[i][0]) * float(self.items[i][1])
+        return round(maths, 2)
+
 
 # TODO: order parts/vehicles from vendor
-
-
+#  unsure if this is finished, please update if not, else delete this to-do thing
 def update_from_vendor(quantity: int, product_name: str):
     # Create connection
     with connect(host=HOST, user=USER, password=PASS) as mysql_connection_object:
@@ -87,11 +90,10 @@ def update_from_vendor(quantity: int, product_name: str):
             mysql_connection_object.commit()
 
 
-print(update_from_vendor(12, "bord_t502"))
-
 # TODO: list all products function
 
 
+# list_out_of_stock_products() is FINISHED
 def list_out_of_stock_products():
     """
     :return: returns a list of all out of stock products, useful to
@@ -117,12 +119,21 @@ def list_out_of_stock_products():
 #   -also create invoice when order is finalized
 
 
+"""
+TEST CASES FOR CODE BELOW
+"""
 s1 = ShoppingCart()
 s1.add_item("cookies", 4, 5.00)
 s1.add_item("bread", 12, 8.40)
+print("-" * 50)
 print(s1.items)
+print(s1.get_total_cost())
+print(s1.items.keys())
+print(s1.items.get("bread"))
+print("-" * 50)
 s1.remove_item("cookies", 2)
 s1.remove_item("bread", 12)
 print(s1.items)
+print(s1.get_total_cost())
 
 print(list_out_of_stock_products())
