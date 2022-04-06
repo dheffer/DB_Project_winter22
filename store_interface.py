@@ -20,10 +20,17 @@ from tkinter import ttk
 def submit_action():
     name = string_user_name.get()
     password = string_user_password.get()
-    if password == 'greghard0001' and name == 'AA0001':
+    if name == 'AA0001' and password == 'greghard0001':
         string_message.set('Successful Login')
+        shop_win()
     else:
         string_message.set('Incorrect Login Credentials')
+
+def shop_win():
+    root2 = tk.Tk()
+    root2.title('Shop')
+    root2.geometry('500x400')
+    root2.mainloop()
 
 root = tk.Tk()
 root.title('Generic Vehicle Merchant Software')
