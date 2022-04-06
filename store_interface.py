@@ -44,6 +44,8 @@ def shop_win():
     ttk.Button(frame_home2, text='-').grid(column=2, row=2, columnspan=1)
     ttk.Button(frame_home2, text='+').grid(column=3, row=1, columnspan=1)
     ttk.Button(frame_home2, text='-').grid(column=3, row=2, columnspan=1)
+    root2.geometry('500x400')
+
     root2.mainloop()
 
 root = tk.Tk()
