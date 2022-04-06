@@ -31,11 +31,8 @@ def add_new_customer(name, email, address, phone, vehic_license):
             # TODO: make it so if a name, email, etc are in the database
             #  then don't add the customer again?
 
-
 # TODO: list all active users from the past month
 
-
-# ShoppingCart Class is finished; if improvements can be made feel free
 class ShoppingCart:
     # TODO: incorporate with the GUI
     def __init__(self):
@@ -78,7 +75,6 @@ class ShoppingCart:
             self.items[item_name][0] = modified
 
     def get_total_cost(self):
-        # TODO: make total cost actually work
         maths = 0
         for i in self.items:
             maths += float(self.items[i][0]) * float(self.items[i][1])
@@ -105,12 +101,9 @@ def update_from_vendor(quantity: int, product_name: str):
             mysql_connection_object.commit()
 
 
-
-
-# TODO: list all products function
 def get_all_products():
     # Create connection
-    with connect(host=host, user=user, password=password) as mysql_connection_object:
+    with connect(host=HOST, user=USER, password=PASS) as mysql_connection_object:
         # Create cursor
         with mysql_connection_object.cursor() as mysql_cursor:
             # Create SQL statement
@@ -125,11 +118,10 @@ def get_all_products():
             # Commit the change
             mysql_connection_object.commit()
 
+
 print(get_all_products())
 
-# TODO: list all out-of-stock products function
 
-# list_out_of_stock_products() is FINISHED
 def list_out_of_stock_products():
     """
     :return: returns a list of all out of stock products, useful to
