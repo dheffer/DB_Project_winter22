@@ -10,7 +10,7 @@ from tkinter import messagebox as msgb
 
 HOST = "localhost"
 USER = "root"
-PASS = "pass"  # DON'T SAVE YOUR PASSWORD TO GIT, MAKE SURE YOU REMOVE IT BEFORE PUSHING
+PASS = "chimoCOCOsQl1202"  # DON'T SAVE YOUR PASSWORD TO GIT, MAKE SURE YOU REMOVE IT BEFORE PUSHING
 DATABASE = "generic_vehicle_merchant"
 
 # thing below was a test; might use later
@@ -25,10 +25,9 @@ DATABASE = "generic_vehicle_merchant"
 def add_new_customer():
     with connect(host=HOST, user=USER, password=PASS, database=DATABASE) as mysql_connection:
         with mysql_connection.cursor() as cursor:
-            user_input = data.get()
             query = f"INSERT INTO generic_vehicle_merchant.customer (cust_name, cust_email, cust_address, " \
                     f"cust_phone, cust_license) " \
-                    f"VALUES ('{name}', '{email}', '{address}', {phone}, {c_license}"
+                    f"VALUES ('', '', '', , "
             cursor.execute(query)
             mysql_connection.commit()
 
@@ -36,60 +35,6 @@ def add_new_customer():
 """
 ^^^^ FUNCTION WORKS BUT DOESNT WORK IN GUI SECTION ^^^^
 """
-
-
-# TODO: attempt to fix the function above
-
-class AddCustomerFrame(ttk.Frame):
-    def __init__(self, parent):
-        ttk.Frame.__init__(self, parent, padding="10 10 10 10")
-        self.pack(fill=tk.BOTH, expand=True)
-
-        self.customerName = tk.StringVar()
-        self.customerEmail = tk.StringVar()
-        self.customerAddress = tk.StringVar()
-        self.customerPhone = tk.StringVar()
-        self.customerLicense = tk.StringVar()
-
-        ttk.Label(self, text="Add Customer to Database").grid(column=1, row=0)
-
-        ttk.Label(self, text="Customer Name: ").grid(column=0, row=1, sticky="w")
-        ttk.Entry(self, width=40, textvariable=self.customerName).grid(column=1,
-                                                                       row=1)
-        ttk.Label(self, text="Cust. Email: ").grid(column=0, row=2, sticky="w")
-        ttk.Entry(self, width=40, textvariable=self.customerEmail).grid(column=1,
-                                                                        row=2)
-        ttk.Label(self, text="Cust. Address: ").grid(column=0, row=3, sticky="w")
-        ttk.Entry(self, width=40, textvariable=self.customerAddress).grid(column=1,
-                                                                          row=3)
-        ttk.Label(self, text="Cust. Phone #: ").grid(column=0, row=4, sticky="w")
-        ttk.Entry(self, width=40, textvariable=self.customerPhone).grid(column=1,
-                                                                        row=4)
-        ttk.Label(self, text="Cust. License #: ").grid(column=0, row=5, sticky="w")
-        ttk.Entry(self, width=40, textvariable=self.customerLicense).grid(column=1,
-                                                                          row=5)
-        ttk.Button(self,
-                   text="SUBMIT",
-                   command=self.add_customer_to_db).grid(column=1, row=6)
-
-        for element in self.winfo_children():
-            element.grid_configure(padx=5, pady=4)
-
-    def add_customer_to_db(self):
-        with connect(host=HOST, user=USER, password=PASS, database=DATABASE) as mysql_connection:
-            with mysql_connection.cursor() as cursor:
-                self.customerName = str(self.customerName.get())
-                self.customerEmail = str(self.customerEmail.get())
-                self.customerAddress = str(self.customerAddress.get())
-                self.customerPhone = int(float(self.customerPhone.get()))
-                self.customerLicense = int(float(self.customerLicense.get()))
-                query = f"INSERT INTO generic_vehicle_merchant.customer (cust_name, cust_email, cust_address, " \
-                        f"cust_phone, cust_license) " \
-                        f"VALUES ('{self.customerName}', '{self.customerEmail}'," \
-                        f" '{self.customerAddress}', {self.customerPhone}, {self.customerLicense} "
-                cursor.execute(query)
-                mysql_connection.commit()
-                mysql_connection.close()
 
 
 # TODO: list all active users from the past month
