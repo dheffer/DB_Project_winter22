@@ -10,7 +10,7 @@ from tkinter import messagebox as msgb
 
 HOST = "localhost"
 USER = "root"
-PASS = "chimoCOCOsQl1202"  # DON'T SAVE YOUR PASSWORD TO GIT, MAKE SURE YOU REMOVE IT BEFORE PUSHING
+PASS = "pass"  # DON'T SAVE YOUR PASSWORD TO GIT, MAKE SURE YOU REMOVE IT BEFORE PUSHING
 DATABASE = "generic_vehicle_merchant"
 
 # thing below was a test; might use later
@@ -78,14 +78,15 @@ class AddCustomerFrame(ttk.Frame):
     def add_customer_to_db(self):
         with connect(host=HOST, user=USER, password=PASS, database=DATABASE) as mysql_connection:
             with mysql_connection.cursor() as cursor:
-                name = str(self.customerName.get())
-                email = str(self.customerEmail.get())
-                address = str(self.customerAddress.get())
-                phone = int(float(self.customerPhone.get()))
-                c_license = int(float(self.customerLicense.get()))
+                self.customerName = str(self.customerName.get())
+                self.customerEmail = str(self.customerEmail.get())
+                self.customerAddress = str(self.customerAddress.get())
+                self.customerPhone = int(float(self.customerPhone.get()))
+                self.customerLicense = int(float(self.customerLicense.get()))
                 query = f"INSERT INTO generic_vehicle_merchant.customer (cust_name, cust_email, cust_address, " \
                         f"cust_phone, cust_license) " \
-                        f"VALUES ('{name}', '{email}', '{address}', {phone}, {c_license}"
+                        f"VALUES ('{self.customerName}', '{self.customerEmail}'," \
+                        f" '{self.customerAddress}', {self.customerPhone}, {self.customerLicense} "
                 cursor.execute(query)
                 mysql_connection.commit()
                 mysql_connection.close()

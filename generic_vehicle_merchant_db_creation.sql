@@ -11,7 +11,7 @@ customer_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
 cust_name VARCHAR(30),
 cust_email LONGTEXT,
 cust_address LONGTEXT NULL,
-cust_phone CHAR(11) NOT NULL,
+cust_phone INT NOT NULL CHECK(cust_phone between 0 and 9999999999),
 cust_license INT);
 
 CREATE TABLE vendor(
