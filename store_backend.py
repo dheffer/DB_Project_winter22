@@ -4,11 +4,11 @@ All of the math etc done on the backend
 """
 
 from mysql.connector import connect
-from tkinter import messagebox as msgb
 
 HOST = "localhost"
 USER = "root"
 PASS = "chimoCOCOsQl1202"  # DON'T SAVE YOUR PASSWORD TO GIT, MAKE SURE YOU REMOVE IT BEFORE PUSHING
+DATABASE = "generic_vehicle_merchant"
 
 # thing below was a test; might use later
 """def login_details(username, password):
@@ -19,24 +19,41 @@ PASS = "chimoCOCOsQl1202"  # DON'T SAVE YOUR PASSWORD TO GIT, MAKE SURE YOU REMO
 
 
 # TODO: create a "add new customer"
-def add_new_customer(name, email, address, phone, vehic_license):
-    with connect(host=HOST, user=USER, password=PASS) as mysql_connection:
+def add_new_customer():
+    with connect(host=HOST, user=USER, password=PASS, database=DATABASE) as mysql_connection:
         with mysql_connection.cursor() as cursor:
-            access_database = "USE generic_vehicle_merchant;"
-            query = f"""INSERT INTO customer(cust_name, cust_email, cust_address, cust_phone, cust_license)
-            VALUES ("{name}", "{email}", "{address}", {phone}, {vehic_license});"""
-            cursor.execute(access_database)
+            user_input = data.get()
+            query = f"INSERT INTO generic_vehicle_merchant.customer (cust_name, cust_email, cust_address, " \
+                    f"cust_phone, cust_license) " \
+                    f"VALUES ('{name}', '{email}', '{address}', {phone}, {c_license}"
             cursor.execute(query)
             mysql_connection.commit()
-            msgb.showinfo(f"{name} added to database")
-            # TODO: make it so if a name, email, etc are in the database
-            #  then don't add the customer again?
 """
 ^^^^ FUNCTION WORKS BUT DOESNT WORK IN GUI SECTION ^^^^
 """
+# TODO: attempt to fix the function above
+
+
+class AddNewCustomer:
+    def __init__(self, c_name, c_email, c_address, c_phone, c_license):
+        self.name = c_name
+        self.email = c_email
+        self.address = c_address
+        self.phone = c_phone
+        self.license = c_license
+
+    def add_customer_to_db(self):
+        with connect(host=HOST, user=USER, password=PASS, database=DATABASE) as mysql_connection:
+            with mysql_connection.cursor() as cursor:
+                query = f"INSERT INTO generic_vehicle_merchant.customer (cust_name, cust_email, cust_address, " \
+                        f"cust_phone, cust_license) " \
+                        f"VALUES ('{self.name}', '{self.email}', '{self.address}', {self.phone}, {self.license}"
+                cursor.execute(query)
+                mysql_connection.commit()
 
 
 # TODO: list all active users from the past month
+
 
 class ShoppingCart:
     # TODO: incorporate with the GUI

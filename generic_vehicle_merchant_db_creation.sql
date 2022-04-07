@@ -8,17 +8,17 @@ u_password VARCHAR (30));
 
 CREATE TABLE customer(
 customer_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-cust_name VARCHAR (30),
-cust_email VARCHAR (50),
-cust_address VARCHAR (30) NULL,
+cust_name VARCHAR(30),
+cust_email LONGTEXT,
+cust_address LONGTEXT NULL,
 cust_phone CHAR(11) NOT NULL,
-cust_license INT NULL);
+cust_license INT);
 
 CREATE TABLE vendor(
 vendor_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
 vendor_name VARCHAR(30) NOT NULL,
-vendor_email VARCHAR(50),
-vendor_phone CHAR(11) NOT NULL);
+vendor_email LONGTEXT,
+vendor_phone INT NOT NULL);
 
 CREATE TABLE products(
 product_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -50,21 +50,21 @@ FOREIGN KEY (customer_id) REFERENCES customer(customer_id));
 /* below is adding data to the tables */
 
 INSERT INTO customer(cust_name, cust_email, cust_address, cust_phone, cust_license)
-VALUES ("Fred Johnson", "fjohn@hotmail.com", "17 Ridgeway Crescent", 18776434994, 159667414);
+VALUES ("Fred Johnson", "fjohn@hotmail.com", "17 Ridgeway Crescent", 1877643499, 159667414);
 INSERT INTO customer(cust_name, cust_email, cust_address, cust_phone, cust_license)
-VALUES ("Margaret Pattinson", "margpatt@gmail.com", "74 Longjohn Street", 18776588144, 160647681);
+VALUES ("Margaret Pattinson", "margpatt@gmail.com", "74 Longjohn Street", 18776588, 160647681);
 INSERT INTO customer(cust_name, cust_email, cust_address, cust_phone, cust_license)
-VALUES ("Billy Formean", "billybob123@gmail.com", "2 Sanji Avenue", 15442788333, 355548641);
+VALUES ("Billy Formean", "billybob123@gmail.com", "2 Sanji Avenue", 15442788, 355548641);
 INSERT INTO customer(cust_name, cust_email, cust_address, cust_phone, cust_license)
-VALUES ("Jane Way", "thejaneway@houtlook.ca", "55 Striker Crescent", 12555988447, 31146686);
+VALUES ("Jane Way", "thejaneway@houtlook.ca", "55 Striker Crescent", 12555988, 31146686);
 
 INSERT INTO store(user_name, u_password)
 VALUES ("AA0001", "greghard0001");
 
 INSERT INTO vendor(vendor_name, vendor_email, vendor_phone)
-VALUES ("Auto-Parts Incorporated", "management@autoparts.inc", 13444777443);
+VALUES ("Auto-Parts Incorporated", "management@autoparts.inc", 13444777);
 INSERT INTO vendor(vendor_name, vendor_email, vendor_phone)
-VALUES ("Bord Vehicles", "gregmerc@bordvehicles.com", 14764331555);
+VALUES ("Bord Vehicles", "gregmerc@bordvehicles.com", 14764331);
 
 INSERT INTO products(product_name, vehicle, cost, vendor_id, quantity)
 VALUES ("bord_t502", "Bord T502", 65000.00, 2, 10);
@@ -88,3 +88,5 @@ select * from store;
 select * from vendor;
 select * from products;
 
+INSERT INTO generic_vehicle_merchant.customer (cust_name, cust_email, cust_address, cust_phone, cust_license)
+VALUES ('billy jean', 'bjillaf11@gnmail.com', '155 ocol', 1441556, 111111);
