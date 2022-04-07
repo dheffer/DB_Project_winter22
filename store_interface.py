@@ -18,11 +18,6 @@ from tkinter import ttk
 from tkinter import messagebox as msgb
 from store_backend import *
 
-HOST = "localhost"
-USER = "root"
-PASS = "pass"  # DON'T SAVE YOUR PASSWORD TO GIT, MAKE SURE YOU REMOVE IT BEFORE PUSHING
-DATABASE = "generic_vehicle_merchant"
-
 
 def submit_action():
     name = string_user_name.get()
@@ -56,7 +51,7 @@ def shop_win():
     """     
     Below: Adding Customer to Database
     """
-    customer_info_frame = ttk.Frame(root2, width=80, height=100)
+    """customer_info_frame = ttk.Frame(root2, width=80, height=100)
     customer_info_frame.pack(fill=tk.BOTH, expand=True)
     ttk.Label(customer_info_frame, text="Add Customer to Database").grid(column=1, row=0)
 
@@ -101,10 +96,15 @@ def shop_win():
 
     ttk.Button(customer_info_frame,
                text="SUBMIT",
-               command=customer_data_input_to_db).grid(column=1, row=6)
+               command=customer_data_input_to_db).grid(column=1, row=6)"""
+    """
+    TESTING ADD NEW CUSTOMER FRAME BELOW
+    """
+    AddCustomerFrame(root2)
+
 
     """
-    Out of Stock Functionality
+    Out of Stock Functionality Below
     """
     ttk.Button(frame_home2, text='Out of Stock items', command=out_stock).grid(column=4,
                                                                                row=0,
