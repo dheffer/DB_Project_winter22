@@ -4,10 +4,14 @@ All of the math etc done on the backend
 """
 
 from mysql.connector import connect
+import tkinter as tk
+from tkinter import ttk
+from tkinter import messagebox as msgb
 
 HOST = "localhost"
 USER = "root"
 PASS = "pass"  # DON'T SAVE YOUR PASSWORD TO GIT, MAKE SURE YOU REMOVE IT BEFORE PUSHING
+DATABASE = "generic_vehicle_merchant"
 
 # thing below was a test; might use later
 """def login_details(username, password):
@@ -18,20 +22,23 @@ PASS = "pass"  # DON'T SAVE YOUR PASSWORD TO GIT, MAKE SURE YOU REMOVE IT BEFORE
 
 
 # TODO: create a "add new customer"
-def add_new_customer(name, email, address, phone, vehic_license):
-    with connect(host=HOST, user=USER, password=PASS) as mysql_connection:
+def add_new_customer():
+    with connect(host=HOST, user=USER, password=PASS, database=DATABASE) as mysql_connection:
         with mysql_connection.cursor() as cursor:
-            access_database = "USE generic_vehicle_merchant;"
-            query = f"""INSERT INTO customer(
-            cust_name, cust_email, cust_address, cust_phone, cust_license)
-            VALUES ("{name}", "{email}", "{address}", {phone}, {vehic_license});"""
-            cursor.execute(access_database)
+            query = f"INSERT INTO generic_vehicle_merchant.customer (cust_name, cust_email, cust_address, " \
+                    f"cust_phone, cust_license) " \
+                    f"VALUES ('', '', '', , "
             cursor.execute(query)
             mysql_connection.commit()
-            # TODO: make it so if a name, email, etc are in the database
-            #  then don't add the customer again?
+
+
+"""
+^^^^ FUNCTION WORKS BUT DOESNT WORK IN GUI SECTION ^^^^
+"""
+
 
 # TODO: list all active users from the past month
+
 
 class ShoppingCart:
     # TODO: incorporate with the GUI
@@ -86,7 +93,6 @@ class ShoppingCart:
 def update_from_vendor(quantity: int, product_name: str):
     # Create connection
     with connect(host=HOST, user=USER, password=PASS) as mysql_connection_object:
-
         # Create cursor
         with mysql_connection_object.cursor() as mysql_cursor:
             # Create SQL statement
@@ -142,6 +148,7 @@ def list_out_of_stock_products():
                 list_of_no_stock.append(no_stock[0:5])
 
     return list_of_no_stock
+
 
 # TODO: create a finalize order
 #   -also create invoice when order is finalized
