@@ -19,6 +19,7 @@ from store_backend import *
 user_login = False
 
 
+# LOGIN GUI BELOW
 def check_login_details():
     name = string_user_name.get()
     password = string_user_password.get()
@@ -54,6 +55,9 @@ ttk.Button(frame_home, text='SUBMIT', command=check_login_details).grid(column=1
 login.mainloop()
 
 
+# LOGIN GUI ABOVE
+
+
 def customer_submit():
     global user_login
     if user_login:
@@ -84,40 +88,108 @@ root = tk.Tk()
 root.title('GVM Application')
 root.geometry('600x400')
 
+# ADD_CUSTOMER FIELDS BELOW
 customer_name = tk.StringVar()
 customer_email = tk.StringVar()
 customer_address = tk.StringVar()
 customer_phone = tk.StringVar()
 customer_license = tk.StringVar()
 
-
 customer_info_frame = ttk.Frame(root)
 customer_info_frame.pack(fill=tk.BOTH, expand=True)
-ttk.Label(customer_info_frame, text="Add Customer to Database").grid(column=1, row=0)
-
-ttk.Label(customer_info_frame, text="Customer Name: ").grid(column=0, row=1, sticky="w")
+ttk.Label(customer_info_frame,
+          background="#D4FDF9",
+          text="Add Customer to Database").grid(column=1,
+                                                row=0)
+ttk.Label(customer_info_frame,
+          background="#F9E3E5",
+          text="Customer Name: ").grid(column=0, row=1, sticky="w")
 ttk.Entry(customer_info_frame,
           width=40,
           textvariable=customer_name).grid(column=1, row=1)
-ttk.Label(customer_info_frame, text="Cust. Email: ").grid(column=0, row=2, sticky="w")
+ttk.Label(customer_info_frame,
+          background="#F9E3E5",
+          text="Cust. Email: ").grid(column=0, row=2, sticky="w")
 ttk.Entry(customer_info_frame,
           width=40,
           textvariable=customer_email).grid(column=1, row=2)
-ttk.Label(customer_info_frame, text="Cust. Address: ").grid(column=0, row=3, sticky="w")
+ttk.Label(customer_info_frame,
+          background="#F9E3E5",
+          text="Cust. Address: ").grid(column=0, row=3, sticky="w")
 ttk.Entry(customer_info_frame,
           width=40,
           textvariable=customer_address).grid(column=1, row=3)
-ttk.Label(customer_info_frame, text="Cust. Phone #: ").grid(column=0, row=4, sticky="w")
+ttk.Label(customer_info_frame,
+          background="#F9E3E5",
+          text="Cust. Phone #: ").grid(column=0, row=4, sticky="w")
 ttk.Entry(customer_info_frame,
           width=40,
           textvariable=customer_phone).grid(column=1, row=4)
-ttk.Label(customer_info_frame, text="Cust. License #: ").grid(column=0, row=5, sticky="w")
+ttk.Label(customer_info_frame,
+          background="#F9E3E5",
+          text="Cust. License #: ").grid(column=0, row=5, sticky="w")
 ttk.Entry(customer_info_frame,
           width=40,
           textvariable=customer_license).grid(column=1, row=5)
 ttk.Button(customer_info_frame,
            text="SUBMIT",
            command=customer_submit).grid(column=1, row=6)
+
+
+# ADD_CUSTOMER FIELDS ABOVE
+
+
+# OUT_OF_STOCK_PRODUCTS BELOW
+def list_out_of_stock_products():
+    """
+    :return: returns a list of all out of stock products, useful to
+     know when to order more
+    """
+    # TODO: incorporate with GUI
+    global user_login
+    if user_login:
+        with connect(host=HOST, user=USER, password=PASS) as mysql_connection:
+            with mysql_connection.cursor() as mysql_cursor:
+                query = f"""SELECT product_id, vehicle, cost, vendor_id
+                  FROM generic_vehicle_merchant.products
+                    WHERE quantity = {0}
+                    """
+                # CHANGE QUANTITY TO 10 OR WHATEVER VALUE TO TEST FUNCTIONALITY
+                mysql_cursor.execute(query)
+                out_of_stock = mysql_cursor.fetchall()
+                no_items_list = ""
+                count = 0
+                for row in out_of_stock:
+                    count += 1
+                    no_items_list += f"{row}\n"
+
+        no_item_textvar.set(f"{no_items_list}")
+    elif not user_login:
+        return msgb.showwarning("ERROR!", "You must login to make changes!")
+
+
+no_item_textvar = tk.StringVar()
+no_item_textvar.set("")
+no_stock_frame = ttk.Frame(root)
+no_stock_frame.pack(fill=tk.BOTH, expand=True)
+ttk.Button(no_stock_frame,
+           text="CLICK TO SHOW OUT OF STOCK ITEMS",
+           command=list_out_of_stock_products).grid(column=1,
+                                                    row=5)
+identification = ttk.Label(no_stock_frame,
+                           background="#D4FDF9",
+                           text="product_id : product_name : cost : vendor_id",
+                           anchor=tk.N,
+                           relief="raised").grid(column=1,
+                                                 row=7,
+                                                 ipadx=5,
+                                                 ipady=3)
+ttk.Label(no_stock_frame,
+          textvariable=no_item_textvar,
+          anchor=tk.S).grid(column=1,
+                            row=10)
+
+# OUT_OF_STOCK_PRODUCTS ABOVE
 
 root.mainloop()
 

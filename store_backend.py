@@ -4,37 +4,11 @@ All of the math etc done on the backend
 """
 
 from mysql.connector import connect
-import tkinter as tk
-from tkinter import ttk
-from tkinter import messagebox as msgb
 
 HOST = "localhost"
 USER = "root"
 PASS = "pass"  # DON'T SAVE YOUR PASSWORD TO GIT, MAKE SURE YOU REMOVE IT BEFORE PUSHING
 DATABASE = "generic_vehicle_merchant"
-
-# thing below was a test; might use later
-"""def login_details(username, password):
-    if (username != "AA0001") or (password != "greghard0001"):
-        raise ValueError("Your login details were incorrect. Please try again.")
-    else:
-        pass"""
-
-
-# TODO: create a "add new customer"
-def add_new_customer():
-    with connect(host=HOST, user=USER, password=PASS, database=DATABASE) as mysql_connection:
-        with mysql_connection.cursor() as cursor:
-            query = f"INSERT INTO generic_vehicle_merchant.customer (cust_name, cust_email, cust_address, " \
-                    f"cust_phone, cust_license) " \
-                    f"VALUES ('', '', '', , "
-            cursor.execute(query)
-            mysql_connection.commit()
-
-
-"""
-^^^^ FUNCTION WORKS BUT DOESNT WORK IN GUI SECTION ^^^^
-"""
 
 
 # TODO: list all active users from the past month
@@ -125,29 +99,25 @@ def get_all_products():
             mysql_connection_object.commit()
 
 
-print(get_all_products())
-
-
-def list_out_of_stock_products():
+'''def list_out_of_stock_products():
     """
     :return: returns a list of all out of stock products, useful to
      know when to order more
     """
     # TODO: incorporate with GUI
+    list_of_no_stock = []
     with connect(host=HOST, user=USER, password=PASS) as mysql_connection:
         with mysql_connection.cursor() as mysql_cursor:
             access_database = "USE generic_vehicle_merchant;"
             query = f"""SELECT * FROM products
-                WHERE quantity = {10}
+                WHERE quantity = {0}
                 """
             mysql_cursor.execute(access_database)
             mysql_cursor.execute(query)
             out_of_stock = mysql_cursor.fetchall()
-            list_of_no_stock = []
             for no_stock in out_of_stock:
                 list_of_no_stock.append(no_stock[0:5])
-
-    return list_of_no_stock
+    return list_of_no_stock'''
 
 
 # TODO: create a finalize order
@@ -171,5 +141,3 @@ s1.remove_item("cookies", 2)
 s1.remove_item("bread", 12)
 print(s1.items)
 print(s1.get_total_cost())
-
-print(list_out_of_stock_products())
