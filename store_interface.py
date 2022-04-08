@@ -152,8 +152,9 @@ def list_out_of_stock_products():
             with mysql_connection.cursor() as mysql_cursor:
                 query = f"""SELECT product_id, vehicle, cost, vendor_id
                   FROM generic_vehicle_merchant.products
-                    WHERE quantity = {10}
+                    WHERE quantity = {0}
                     """
+                # CHANGE QUANTITY TO 10 OR WHATEVER VALUE TO TEST FUNCTIONALITY
                 mysql_cursor.execute(query)
                 out_of_stock = mysql_cursor.fetchall()
                 no_items_list = ""
