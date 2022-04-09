@@ -43,6 +43,7 @@ quantity INT,
 time_of_sale DATE,
 product_id INT,
 customer_id INT,
+time_of_sale DATE,
 FOREIGN KEY (product_id) REFERENCES products(product_id),
 FOREIGN KEY (customer_id) REFERENCES customer(customer_id));
 
@@ -90,3 +91,10 @@ select * from products;
 
 INSERT INTO generic_vehicle_merchant.customer (cust_name, cust_email, cust_address, cust_phone, cust_license)
 VALUES ('billy jean', 'bjillaf11@gnmail.com', '155 ocol', 1441556, 111111);
+
+insert into invoice ( quantity, time_of_sale, product_id, customer_id)
+values (1, "2022-04-07", 1, 1);
+insert into invoice (invoice_id, quantity, time_of_sale, product_id, customer_id)
+values (2, "2022-03-29", 2, 2);
+insert into invoice (invoice_id, quantity, time_of_sale, product_id, customer_id)
+values (3, "2022-03-20", 3, 3);
