@@ -7,9 +7,8 @@ from mysql.connector import connect
 
 HOST = "localhost"
 USER = "root"
-PASS = "password"  # DON'T SAVE YOUR PASSWORD TO GIT, MAKE SURE YOU REMOVE IT BEFORE PUSHING
+PASS = "chimoCOCOsQl1202"  # DON'T SAVE YOUR PASSWORD TO GIT, MAKE SURE YOU REMOVE IT BEFORE PUSHING
 DATABASE = "generic_vehicle_merchant"
-
 
 
 class ShoppingCart:
@@ -60,25 +59,6 @@ class ShoppingCart:
         return round(maths, 2)
 
 
-# TODO: order parts/vehicles from vendor
-#  unsure if this is finished, please update if not, else delete this to-do thing
-def update_from_vendor(quantity: int, product_name: str):
-    # Create connection
-    with connect(host=HOST, user=USER, password=PASS) as mysql_connection_object:
-        # Create cursor
-        with mysql_connection_object.cursor() as mysql_cursor:
-            # Create SQL statement
-            update_statement = f"""USE generic_vehicle_merchant;"""
-            update_statement2 = f"""UPDATE products
-                                    SET quantity = {quantity}
-                                    WHERE product_name = '{product_name}';"""
-            # Execute the statement
-            mysql_cursor.execute(update_statement)
-            mysql_cursor.execute(update_statement2)
-            # Commit the change
-            mysql_connection_object.commit()
-
-
 def get_all_products():
     # Create connection
     with connect(host=HOST, user=USER, password=PASS) as mysql_connection_object:
@@ -95,27 +75,6 @@ def get_all_products():
                 print(row)
             # Commit the change
             mysql_connection_object.commit()
-
-
-'''def list_out_of_stock_products():
-    """
-    :return: returns a list of all out of stock products, useful to
-     know when to order more
-    """
-    # TODO: incorporate with GUI
-    list_of_no_stock = []
-    with connect(host=HOST, user=USER, password=PASS) as mysql_connection:
-        with mysql_connection.cursor() as mysql_cursor:
-            access_database = "USE generic_vehicle_merchant;"
-            query = f"""SELECT * FROM products
-                WHERE quantity = {0}
-                """
-            mysql_cursor.execute(access_database)
-            mysql_cursor.execute(query)
-            out_of_stock = mysql_cursor.fetchall()
-            for no_stock in out_of_stock:
-                list_of_no_stock.append(no_stock[0:5])
-    return list_of_no_stock'''
 
 
 # TODO: create a finalize order

@@ -2,12 +2,8 @@
 This file is for creation of what the user will see
 Our version of our own DBMS
 """
-
-# TODO: button to list active users in past month
 # TODO: shopping cart area, with add/remove features (track user id/name as well)
 # TODO: area to order parts/vehicles from vendor
-# TODO: button to list all products from store DONE
-# TODO: button to list everything out of stock DONE
 # TODO: finalize order button
 
 # create the root window
@@ -86,7 +82,7 @@ def customer_submit():
 
 root = tk.Tk()
 root.title('GVM Application')
-root.geometry('800x800')
+root.geometry('900x500')
 
 # ADD_CUSTOMER FIELDS BELOW
 customer_name = tk.StringVar()
@@ -95,44 +91,44 @@ customer_address = tk.StringVar()
 customer_phone = tk.StringVar()
 customer_license = tk.StringVar()
 
-customer_info_frame = ttk.Frame(root)
-customer_info_frame.pack(fill=tk.BOTH, expand=True)
-ttk.Label(customer_info_frame,
+root_frame = ttk.Frame(root)
+root_frame.pack(fill=tk.BOTH, expand=True)
+ttk.Label(root_frame,
           background="#D4FDF9",
           text="Add Customer to Database").grid(column=1,
                                                 row=0)
-ttk.Label(customer_info_frame,
+ttk.Label(root_frame,
           background="#F9E3E5",
           text="Customer Name: ").grid(column=0, row=1, sticky="w")
-ttk.Entry(customer_info_frame,
+ttk.Entry(root_frame,
           width=40,
           textvariable=customer_name).grid(column=1, row=1)
-ttk.Label(customer_info_frame,
+ttk.Label(root_frame,
           background="#F9E3E5",
           text="Cust. Email: ").grid(column=0, row=2, sticky="w")
-ttk.Entry(customer_info_frame,
+ttk.Entry(root_frame,
           width=40,
           textvariable=customer_email).grid(column=1, row=2)
-ttk.Label(customer_info_frame,
+ttk.Label(root_frame,
           background="#F9E3E5",
           text="Cust. Address: ").grid(column=0, row=3, sticky="w")
-ttk.Entry(customer_info_frame,
+ttk.Entry(root_frame,
           width=40,
           textvariable=customer_address).grid(column=1, row=3)
-ttk.Label(customer_info_frame,
+ttk.Label(root_frame,
           background="#F9E3E5",
           text="Cust. Phone #: ").grid(column=0, row=4, sticky="w")
-ttk.Entry(customer_info_frame,
+ttk.Entry(root_frame,
           width=40,
           textvariable=customer_phone).grid(column=1, row=4)
-ttk.Label(customer_info_frame,
+ttk.Label(root_frame,
           background="#F9E3E5",
           text="Cust. License #: ").grid(column=0, row=5, sticky="w")
-ttk.Entry(customer_info_frame,
+ttk.Entry(root_frame,
           width=40,
           textvariable=customer_license).grid(column=1, row=5)
-ttk.Button(customer_info_frame,
-           text="SUBMIT",
+ttk.Button(root_frame,
+           text="SUBMIT CUSTOMER INFO",
            command=customer_submit).grid(column=1, row=6)
 
 
@@ -162,12 +158,19 @@ def last_months_users():
             mysql_connection_object.commit()
     users_textvar.set(f"{user_list}")
 
+
 users_textvar = tk.StringVar()
 users_textvar.set("")
-last_month_frame = ttk.Frame(root)
-last_month_frame.pack(fill=tk.BOTH, expand=True)
-ttk.Button(last_month_frame,text="CLICK TO SHOW ALL USERS IN THE LAST MONTH",command=last_months_users).grid(column=3,row=2)
-ttk.Label(last_month_frame, textvariable=users_textvar,anchor=tk.N).grid(column=3,row=3)
+
+ttk.Button(root_frame,
+           text="SHOW ALL USERS IN THE LAST MONTH",
+           command=last_months_users).grid(column=4,
+                                           row=9,
+                                           sticky=tk.W)
+ttk.Label(root_frame, textvariable=users_textvar).grid(column=4,
+                                                       row=10,
+                                                       sticky=tk.W)
+
 
 # OUT_OF_STOCK_PRODUCTS BELOW
 def list_out_of_stock_products():
@@ -175,7 +178,6 @@ def list_out_of_stock_products():
     :return: returns a list of all out of stock products, useful to
      know when to order more
     """
-    # TODO: incorporate with GUI
     global user_login
     if user_login:
         with connect(host=HOST, user=USER, password=PASS) as mysql_connection:
@@ -200,19 +202,19 @@ def list_out_of_stock_products():
 
 no_item_textvar = tk.StringVar()
 no_item_textvar.set("")
-no_stock_frame = ttk.Frame(root)
-no_stock_frame.pack(fill=tk.BOTH, expand=True)
-ttk.Button(no_stock_frame,
-           text="CLICK TO SHOW OUT OF STOCK ITEMS",
+ttk.Button(root_frame,
+           text="SHOW OUT OF STOCK ITEMS",
            command=list_out_of_stock_products).grid(column=1,
-                                                    row=5)
+                                                    row=9)
 
-ttk.Label(no_stock_frame,
+ttk.Label(root_frame,
           textvariable=no_item_textvar,
           anchor=tk.S).grid(column=1,
                             row=10)
 
+
 # OUT_OF_STOCK_PRODUCTS ABOVE
+
 
 def get_all_products():
     # Create connection
@@ -240,21 +242,20 @@ def get_all_products():
         return msgb.showwarning("ERROR!", "You must login to make changes!")
 
 
-
 all_item_textvar = tk.StringVar()
 all_item_textvar.set("")
-all_stock_frame = ttk.Frame(root)
-all_stock_frame.pack(fill=tk.BOTH, expand=True)
-ttk.Button(all_stock_frame,
-           text="CLICK TO SHOW ALL PRODUCTS",
-           command=get_all_products).grid(column=2,
-                                                    row=5)
-ttk.Label(all_stock_frame,
-          textvariable=all_item_textvar,
-          anchor=tk.S).grid(column=2,
-                            row=10)
+
+ttk.Button(root_frame,
+           text="SHOW ALL PRODUCTS",
+           command=get_all_products).grid(column=3,
+                                          row=9)
+ttk.Label(root_frame,
+          textvariable=all_item_textvar).grid(column=3,
+                                              row=10)
+
 
 # Get_all_products above
+
 
 def update_from_vendor():
     # Create connection
@@ -274,73 +275,42 @@ def update_from_vendor():
             # Commit the change
             mysql_connection_object.commit()
 
+
 update_quan_textvar = tk.StringVar()
 update_quan_textvar.set("")
-update_quan_frame = ttk.Frame(root)
-update_quan_frame.pack(fill=tk.BOTH, expand=True)
-ttk.Button(update_quan_frame,
-           text="ORDER PRODUCTS FROM VENDOR HERE!",
+
+ttk.Button(root_frame,
+           text="ORDER PRODUCTS FROM VENDOR",
            command=update_from_vendor).grid(column=1,
-                                                    row=12)
+                                            row=12)
 product = tk.StringVar()
 quantity = tk.IntVar()
-ttk.Entry(update_quan_frame,
+ttk.Entry(root_frame,
           width=40,
           textvariable=product).grid(column=1, row=13)
-ttk.Label(update_quan_frame,
+ttk.Label(root_frame,
           background="#F9E3E5",
           text="Product Name: ").grid(column=0, row=13, sticky="w")
-ttk.Entry(update_quan_frame,
+ttk.Entry(root_frame,
           width=40,
           textvariable=quantity).grid(column=1, row=14)
-ttk.Label(customer_info_frame,
+ttk.Label(root_frame,
           background="#F9E3E5",
           text="Quantity: ").grid(column=0, row=14, sticky="w")
-ttk.Label(update_quan_frame,
+ttk.Label(root_frame,
           textvariable=update_quan_textvar,
           anchor=tk.S).grid(column=0,
                             row=12)
 
+# SHOPPING_CART SECTION BELOW
+cart_product_id = tk.StringVar()
+cart_product_id.set("")
 
-# GET_FROM_VENDOR(if the quantity is less than what customer orders get parts from vendor)
+ttk.Label(root_frame,
+          background="#F9E3E5",
+          text="Shopping Cart").grid(column=3, row=0)
+ttk.Entry(root_frame,
+          width=40,
+          textvariable=cart_product_id).grid(column=3, row=1)
+
 root.mainloop()
-
-
-def shop_win():
-    # TODO: this needs to be resorted because it's currently non-functional
-    root2 = tk.Tk()
-    root2.title('Generic Vehicle Merchant Software')
-    root2.geometry('800x600')
-    frame_home2 = ttk.Frame(root2)
-    frame_home2.pack(fill=tk.BOTH, expand=True)
-    ttk.Label(frame_home2, text="Product 1").grid(column=0, row=0)
-    ttk.Label(frame_home2, text="Product 2").grid(column=1, row=0)
-    ttk.Label(frame_home2, text="Product 3").grid(column=2, row=0)
-    ttk.Label(frame_home2, text="Product 4").grid(column=3, row=0)
-    ttk.Button(frame_home2, text='+').grid(column=0, row=1, columnspan=1)
-    ttk.Button(frame_home2, text='-').grid(column=0, row=2, columnspan=1)
-    ttk.Button(frame_home2, text='+').grid(column=1, row=1, columnspan=1)
-    ttk.Button(frame_home2, text='-').grid(column=1, row=2, columnspan=1)
-    ttk.Button(frame_home2, text='+').grid(column=2, row=1, columnspan=1)
-    ttk.Button(frame_home2, text='-').grid(column=2, row=2, columnspan=1)
-    ttk.Button(frame_home2, text='+').grid(column=3, row=1, columnspan=1)
-    ttk.Button(frame_home2, text='-').grid(column=3, row=2, columnspan=1)
-
-    ttk.Button(frame_home2, text='Out of Stock items', command=out_stock).grid(column=4,
-                                                                               row=0,
-                                                                               columnspan=2)
-
-    root2.mainloop()
-
-
-def out_stock():
-    # TODO: this also needs to be resorted
-    root3 = tk.Tk()
-    root3.title('Out Of Stock')
-    root3.geometry('200x100')
-    frame_home3 = ttk.Frame(root3)
-    frame_home3.pack(fill=tk.BOTH, expand=True)
-    ttk.Label(frame_home3, text="Product 1").grid(column=0, row=0)
-    ttk.Label(frame_home3, text="Product 2").grid(column=0, row=1)
-    ttk.Label(frame_home3, text="Product 3").grid(column=0, row=2)
-    ttk.Label(frame_home3, text="Product 4").grid(column=0, row=3)
