@@ -6,8 +6,8 @@ Our version of our own DBMS
 # TODO: button to list active users in past month
 # TODO: shopping cart area, with add/remove features (track user id/name as well)
 # TODO: area to order parts/vehicles from vendor
-# TODO: button to list all products from store
-# TODO: button to list everything out of stock
+# TODO: button to list all products from store DONE
+# TODO: button to list everything out of stock DONE
 # TODO: finalize order button
 
 # create the root window
@@ -86,7 +86,7 @@ def customer_submit():
 
 root = tk.Tk()
 root.title('GVM Application')
-root.geometry('600x400')
+root.geometry('800x800')
 
 # ADD_CUSTOMER FIELDS BELOW
 customer_name = tk.StringVar()
@@ -138,6 +138,36 @@ ttk.Button(customer_info_frame,
 
 # ADD_CUSTOMER FIELDS ABOVE
 
+# ACTIVE USERS IN THE LAST MONTH
+def last_months_users():
+    # Create connection
+    with connect(host=HOST, user=USER, password=PASS) as mysql_connection_object:
+        # Create cursor
+        with mysql_connection_object.cursor() as mysql_cursor:
+            # Create SQL statement
+            update_statement = f"""USE generic_vehicle_merchant;"""
+            update_statement2 = f"""SELECT customer.cust_name, invoice.time_of_sale
+                                    from customer inner join invoice
+                                    on customer.customer_id = invoice.customer_id
+                                    where time_of_sale BETWEEN NOW() - INTERVAL 31 DAY AND NOW();"""
+            # Execute the statement
+            mysql_cursor.execute(update_statement)
+            mysql_cursor.execute(update_statement2)
+            user_list = ""
+            count = 0
+            for row in mysql_cursor:
+                count += 1
+                user_list += f"Customer: {str(row[0])}, Last Order: {str(row[1])}\n"
+                # Commit the change
+            mysql_connection_object.commit()
+    users_textvar.set(f"{user_list}")
+
+users_textvar = tk.StringVar()
+users_textvar.set("")
+last_month_frame = ttk.Frame(root)
+last_month_frame.pack(fill=tk.BOTH, expand=True)
+ttk.Button(last_month_frame,text="CLICK TO SHOW ALL USERS IN THE LAST MONTH",command=last_months_users).grid(column=3,row=2)
+ttk.Label(last_month_frame, textvariable=users_textvar,anchor=tk.N).grid(column=3,row=3)
 
 # OUT_OF_STOCK_PRODUCTS BELOW
 def list_out_of_stock_products():
@@ -150,9 +180,9 @@ def list_out_of_stock_products():
     if user_login:
         with connect(host=HOST, user=USER, password=PASS) as mysql_connection:
             with mysql_connection.cursor() as mysql_cursor:
-                query = f"""SELECT product_id, vehicle, cost, vendor_id
+                query = f"""SELECT product_id, vehicle, cost, vendor_id, quantity
                   FROM generic_vehicle_merchant.products
-                    WHERE quantity = {0}
+                    WHERE quantity = {10}
                     """
                 # CHANGE QUANTITY TO 10 OR WHATEVER VALUE TO TEST FUNCTIONALITY
                 mysql_cursor.execute(query)
@@ -161,7 +191,7 @@ def list_out_of_stock_products():
                 count = 0
                 for row in out_of_stock:
                     count += 1
-                    no_items_list += f"{row}\n"
+                    no_items_list += f"Item: {str(row[1])}, Quantity: {row[4]}\n"
 
         no_item_textvar.set(f"{no_items_list}")
     elif not user_login:
@@ -176,14 +206,7 @@ ttk.Button(no_stock_frame,
            text="CLICK TO SHOW OUT OF STOCK ITEMS",
            command=list_out_of_stock_products).grid(column=1,
                                                     row=5)
-identification = ttk.Label(no_stock_frame,
-                           background="#D4FDF9",
-                           text="product_id : product_name : cost : vendor_id",
-                           anchor=tk.N,
-                           relief="raised").grid(column=1,
-                                                 row=7,
-                                                 ipadx=5,
-                                                 ipady=3)
+
 ttk.Label(no_stock_frame,
           textvariable=no_item_textvar,
           anchor=tk.S).grid(column=1,
@@ -191,6 +214,95 @@ ttk.Label(no_stock_frame,
 
 # OUT_OF_STOCK_PRODUCTS ABOVE
 
+def get_all_products():
+    # Create connection
+    global user_login
+    if user_login:
+        with connect(host=HOST, user=USER, password=PASS) as mysql_connection_object:
+            # Create cursor
+            with mysql_connection_object.cursor() as mysql_cursor:
+                # Create SQL statement
+                update_statement = f"""USE generic_vehicle_merchant;"""
+                update_statement2 = f"""SELECT vehicle
+                                        FROM `generic_vehicle_merchant`.`products`;"""
+                # Execute the statement
+                mysql_cursor.execute(update_statement)
+                mysql_cursor.execute(update_statement2)
+                items_list = ""
+                count = 0
+                for row in mysql_cursor:
+                    count += 1
+                    items_list += f"Item: {str(row[0])}\n"
+                # Commit the change
+                mysql_connection_object.commit()
+        all_item_textvar.set(f"{items_list}")
+    elif not user_login:
+        return msgb.showwarning("ERROR!", "You must login to make changes!")
+
+
+
+all_item_textvar = tk.StringVar()
+all_item_textvar.set("")
+all_stock_frame = ttk.Frame(root)
+all_stock_frame.pack(fill=tk.BOTH, expand=True)
+ttk.Button(all_stock_frame,
+           text="CLICK TO SHOW ALL PRODUCTS",
+           command=get_all_products).grid(column=2,
+                                                    row=5)
+ttk.Label(all_stock_frame,
+          textvariable=all_item_textvar,
+          anchor=tk.S).grid(column=2,
+                            row=10)
+
+# Get_all_products above
+
+def update_from_vendor():
+    # Create connection
+    with connect(host=HOST, user=USER, password=PASS) as mysql_connection_object:
+        # Create cursor
+        with mysql_connection_object.cursor() as mysql_cursor:
+            product_name = str(product.get())
+            total_quantity = int(str(quantity.get()))
+            # Create SQL statement
+            update_statement = f"""USE generic_vehicle_merchant;"""
+            update_statement2 = f"""UPDATE products
+                                    SET quantity = {total_quantity}
+                                    WHERE product_name = '{product_name}';"""
+            # Execute the statement
+            mysql_cursor.execute(update_statement)
+            mysql_cursor.execute(update_statement2)
+            # Commit the change
+            mysql_connection_object.commit()
+
+update_quan_textvar = tk.StringVar()
+update_quan_textvar.set("")
+update_quan_frame = ttk.Frame(root)
+update_quan_frame.pack(fill=tk.BOTH, expand=True)
+ttk.Button(update_quan_frame,
+           text="ORDER PRODUCTS FROM VENDOR HERE!",
+           command=update_from_vendor).grid(column=1,
+                                                    row=12)
+product = tk.StringVar()
+quantity = tk.IntVar()
+ttk.Entry(update_quan_frame,
+          width=40,
+          textvariable=product).grid(column=1, row=13)
+ttk.Label(update_quan_frame,
+          background="#F9E3E5",
+          text="Product Name: ").grid(column=0, row=13, sticky="w")
+ttk.Entry(update_quan_frame,
+          width=40,
+          textvariable=quantity).grid(column=1, row=14)
+ttk.Label(customer_info_frame,
+          background="#F9E3E5",
+          text="Quantity: ").grid(column=0, row=14, sticky="w")
+ttk.Label(update_quan_frame,
+          textvariable=update_quan_textvar,
+          anchor=tk.S).grid(column=0,
+                            row=12)
+
+
+# GET_FROM_VENDOR(if the quantity is less than what customer orders get parts from vendor)
 root.mainloop()
 
 

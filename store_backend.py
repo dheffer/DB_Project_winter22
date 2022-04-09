@@ -7,11 +7,9 @@ from mysql.connector import connect
 
 HOST = "localhost"
 USER = "root"
-PASS = "pass"  # DON'T SAVE YOUR PASSWORD TO GIT, MAKE SURE YOU REMOVE IT BEFORE PUSHING
+PASS = "password"  # DON'T SAVE YOUR PASSWORD TO GIT, MAKE SURE YOU REMOVE IT BEFORE PUSHING
 DATABASE = "generic_vehicle_merchant"
 
-
-# TODO: list all active users from the past month
 
 
 class ShoppingCart:
@@ -141,3 +139,4 @@ s1.remove_item("cookies", 2)
 s1.remove_item("bread", 12)
 print(s1.items)
 print(s1.get_total_cost())
+
