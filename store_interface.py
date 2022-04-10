@@ -308,60 +308,95 @@ cart_product_id.set("")
 
 
 def add_to_cart():
-    items_in_cart = dict(cart_items_text.get())
+    global cart_items
+    global cart_display
     prod_id = int(cart_product_id.get())
-    if prod_id not in items_in_cart.keys():
-        items_in_cart.update({prod_id: 1})
-    elif prod_id in items_in_cart.keys():
-        items_in_cart.update({prod_id: +1})
+    cart_quant = int(cart_quantity.get())
+    if prod_id not in cart_items.keys():
+        cart_items.update({prod_id: cart_quant})
+        print(f"1. {cart_items}")
+    elif prod_id in cart_items.keys():
+        update = cart_items[prod_id] + cart_quant
+        cart_items.update({prod_id: update})
+        print(f"2. {cart_items}")
     else:
-        return
+        return print(f"3. {cart_items}")
+
+    # TODO: fix this for loop
+    # the issue might be that its adding to a string? maybe add to list, then
+    # convert to string
+    for keys, values in cart_items.items():
+        cart_display += f"Product ID: {keys}\t Quantity: {values}\n"
+    cart_display_stringvar.set(cart_display)
 
 
 def remove_from_cart():
-    items_in_cart = dict(cart_items_text.get())
+    global cart_items
+    global cart_display
     prod_id = int(cart_product_id.get())
-    if prod_id not in items_in_cart.keys():
+    cart_quant = int(cart_quantity.get())
+    if prod_id not in cart_items.keys():
+        msgb.showwarning("ERROR", "The item isn't in your cart!")
         raise AssertionError("This item isn't in your shopping cart")
 
     # deletes item from shopping cart if quantity specified is greater than amount in cart
-    elif items_in_cart[prod_id].values() <= 1:
-        items_in_cart.pop(prod_id)
+    elif cart_items[prod_id] <= cart_quant:
+        cart_items.pop(prod_id)
+        print(f"4. {cart_items}")
 
     # if quantity specified is less than cart amount, subtract that amount from cart
-    elif items_in_cart[prod_id].values() > 1:
-        cart_quantity = items_in_cart[prod_id].values()
-        modified = cart_quantity - 1
-        items_in_cart[prod_id].values = modified
+    elif cart_items[prod_id] > cart_quant:
+        modified = cart_items[prod_id] - cart_quant
+        cart_items.update({prod_id: modified})
+        print(f"5. {cart_items}")
+
+    # TODO: fix this for loop
+    # the issue might be that its adding to a string? maybe add to list, then
+    # convert to string
+    for keys, values in cart_items.items():
+        cart_display += f"Product ID: {keys}\t Quantity: {values}\n"
+    cart_display_stringvar.set(cart_display)
 
 
 # ADD TO CART
+cart_items = {}
+cart_item_stringvar = tk.StringVar()
+cart_item_stringvar.set(cart_items)
+
+cart_display_stringvar = tk.StringVar()
+cart_display = ""
+
 ttk.Label(root_frame,
           background="#D4FDF9",
           text="Shopping Cart").grid(column=4, row=0)
 cart_product_id = tk.IntVar()
+cart_quantity = tk.IntVar()
 ttk.Label(root_frame,
           background="#F9E3E5",
           text="Product ID: ").grid(column=3, row=1)
 ttk.Entry(root_frame,
           width=15,
           textvariable=cart_product_id).grid(column=4, row=1)
+ttk.Label(root_frame,
+          background="#F9E3E5",
+          text="Quantity: ").grid(column=3, row=2)
+ttk.Entry(root_frame,
+          width=15,
+          textvariable=cart_quantity).grid(column=4, row=2)
 ttk.Button(root_frame,
            text="+",
            command=add_to_cart,
-           width=5).grid(column=4, row=2, sticky=tk.W)
+           width=5).grid(column=4, row=3, sticky=tk.W)
 ttk.Button(root_frame,
            text="-",
            command=remove_from_cart,
-           width=5).grid(column=4, row=2, sticky=tk.E)
+           width=5).grid(column=4, row=3, sticky=tk.E)
 
 # CART ITEMS LIST
 ttk.Label(root_frame,
           background="#D4FDF9",
           text="Cart Items").grid(column=5, row=0)
-cart_items_text = tk.StringVar()
-cart_items_text.set(dict)
 ttk.Label(root_frame,
-          textvariable=cart_items_text).grid(column=5, row=1)
+          textvariable=cart_display_stringvar).grid(column=5, row=1)
 
 root.mainloop()
