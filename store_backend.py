@@ -7,7 +7,7 @@ from mysql.connector import connect
 
 HOST = "localhost"
 USER = "root"
-PASS = "chimoCOCOsQl1202"  # DON'T SAVE YOUR PASSWORD TO GIT, MAKE SURE YOU REMOVE IT BEFORE PUSHING
+PASS = "pass"  # DON'T SAVE YOUR PASSWORD TO GIT, MAKE SURE YOU REMOVE IT BEFORE PUSHING
 DATABASE = "generic_vehicle_merchant"
 
 
@@ -57,24 +57,6 @@ class ShoppingCart:
         for i in self.items:
             maths += float(self.items[i][0]) * float(self.items[i][1])
         return round(maths, 2)
-
-
-def get_all_products():
-    # Create connection
-    with connect(host=HOST, user=USER, password=PASS) as mysql_connection_object:
-        # Create cursor
-        with mysql_connection_object.cursor() as mysql_cursor:
-            # Create SQL statement
-            update_statement = f"""USE generic_vehicle_merchant;"""
-            update_statement2 = f"""SELECT product_name
-                                    FROM `generic_vehicle_merchant`.`products`;"""
-            # Execute the statement
-            mysql_cursor.execute(update_statement)
-            mysql_cursor.execute(update_statement2)
-            for row in mysql_cursor:
-                print(row)
-            # Commit the change
-            mysql_connection_object.commit()
 
 
 # TODO: create a finalize order
