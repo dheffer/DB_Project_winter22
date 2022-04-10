@@ -11,7 +11,7 @@ PASS = "pass"  # DON'T SAVE YOUR PASSWORD TO GIT, MAKE SURE YOU REMOVE IT BEFORE
 DATABASE = "generic_vehicle_merchant"
 
 
-class ShoppingCart:
+"""class ShoppingCart:
     # TODO: incorporate with the GUI
     def __init__(self):
         self.items = {}
@@ -56,7 +56,7 @@ class ShoppingCart:
         maths = 0
         for i in self.items:
             maths += float(self.items[i][0]) * float(self.items[i][1])
-        return round(maths, 2)
+        return round(maths, 2)"""
 
 
 # TODO: create a finalize order
