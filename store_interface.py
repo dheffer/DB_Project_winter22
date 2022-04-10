@@ -164,10 +164,10 @@ users_textvar.set("")
 
 ttk.Button(root_frame,
            text="SHOW ALL USERS IN THE LAST MONTH",
-           command=last_months_users).grid(column=4,
+           command=last_months_users).grid(column=5,
                                            row=9,
                                            sticky=tk.W)
-ttk.Label(root_frame, textvariable=users_textvar).grid(column=4,
+ttk.Label(root_frame, textvariable=users_textvar).grid(column=5,
                                                        row=10,
                                                        sticky=tk.W)
 
@@ -267,7 +267,7 @@ def update_from_vendor():
             # Create SQL statement
             update_statement = f"""USE generic_vehicle_merchant;"""
             update_statement2 = f"""UPDATE products
-                                    SET quantity = {total_quantity}
+                                    SET quantity = quantity + {total_quantity}
                                     WHERE product_name = '{product_name}';"""
             # Execute the statement
             mysql_cursor.execute(update_statement)
@@ -280,7 +280,7 @@ update_quan_textvar = tk.StringVar()
 update_quan_textvar.set("")
 
 ttk.Button(root_frame,
-           text="ORDER PRODUCTS FROM VENDOR",
+           text="CLICK TO ORDER PRODUCTS FROM VENDOR",
            command=update_from_vendor).grid(column=1,
                                             row=12)
 product = tk.StringVar()
@@ -306,11 +306,62 @@ ttk.Label(root_frame,
 cart_product_id = tk.StringVar()
 cart_product_id.set("")
 
+
+def add_to_cart():
+    items_in_cart = dict(cart_items_text.get())
+    prod_id = int(cart_product_id.get())
+    if prod_id not in items_in_cart.keys():
+        items_in_cart.update({prod_id: 1})
+    elif prod_id in items_in_cart.keys():
+        items_in_cart.update({prod_id: +1})
+    else:
+        return
+
+
+def remove_from_cart():
+    items_in_cart = dict(cart_items_text.get())
+    prod_id = int(cart_product_id.get())
+    if prod_id not in items_in_cart.keys():
+        raise AssertionError("This item isn't in your shopping cart")
+
+    # deletes item from shopping cart if quantity specified is greater than amount in cart
+    elif items_in_cart[prod_id].values() <= 1:
+        items_in_cart.pop(prod_id)
+
+    # if quantity specified is less than cart amount, subtract that amount from cart
+    elif items_in_cart[prod_id].values() > 1:
+        cart_quantity = items_in_cart[prod_id].values()
+        modified = cart_quantity - 1
+        items_in_cart[prod_id].values = modified
+
+
+# ADD TO CART
+ttk.Label(root_frame,
+          background="#D4FDF9",
+          text="Shopping Cart").grid(column=4, row=0)
+cart_product_id = tk.IntVar()
 ttk.Label(root_frame,
           background="#F9E3E5",
-          text="Shopping Cart").grid(column=3, row=0)
+          text="Product ID: ").grid(column=3, row=1)
 ttk.Entry(root_frame,
-          width=40,
-          textvariable=cart_product_id).grid(column=3, row=1)
+          width=15,
+          textvariable=cart_product_id).grid(column=4, row=1)
+ttk.Button(root_frame,
+           text="+",
+           command=add_to_cart,
+           width=5).grid(column=4, row=2, sticky=tk.W)
+ttk.Button(root_frame,
+           text="-",
+           command=remove_from_cart,
+           width=5).grid(column=4, row=2, sticky=tk.E)
+
+# CART ITEMS LIST
+ttk.Label(root_frame,
+          background="#D4FDF9",
+          text="Cart Items").grid(column=5, row=0)
+cart_items_text = tk.StringVar()
+cart_items_text.set(dict)
+ttk.Label(root_frame,
+          textvariable=cart_items_text).grid(column=5, row=1)
 
 root.mainloop()
