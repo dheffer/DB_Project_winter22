@@ -309,7 +309,6 @@ cart_product_id.set("")
 
 def add_to_cart():
     global cart_items
-    global cart_display
     prod_id = int(cart_product_id.get())
     cart_quant = int(cart_quantity.get())
     if prod_id not in cart_items.keys():
@@ -322,17 +321,17 @@ def add_to_cart():
     else:
         return print(f"3. {cart_items}")
 
-    # TODO: fix this for loop
-    # the issue might be that its adding to a string? maybe add to list, then
-    # convert to string
+    # loop to display items in cart
+    key_value = ""
     for keys, values in cart_items.items():
-        cart_display += f"Product ID: {keys}\t Quantity: {values}\n"
-    cart_display_stringvar.set(cart_display)
+        key = f"Product Name: {keys}\t"
+        value = f"Quantity: {values}\n"
+        key_value += key + value
+    cart_display_stringvar.set(key_value)
 
 
 def remove_from_cart():
     global cart_items
-    global cart_display
     prod_id = int(cart_product_id.get())
     cart_quant = int(cart_quantity.get())
     if prod_id not in cart_items.keys():
@@ -350,12 +349,13 @@ def remove_from_cart():
         cart_items.update({prod_id: modified})
         print(f"5. {cart_items}")
 
-    # TODO: fix this for loop
-    # the issue might be that its adding to a string? maybe add to list, then
-    # convert to string
+    # loop to display items in cart
+    key_value = ""
     for keys, values in cart_items.items():
-        cart_display += f"Product ID: {keys}\t Quantity: {values}\n"
-    cart_display_stringvar.set(cart_display)
+        key = f"Product Name: {keys}\t"
+        value = f"Quantity: {values}\n"
+        key_value += key + value
+    cart_display_stringvar.set(key_value)
 
 
 # ADD TO CART
@@ -364,7 +364,6 @@ cart_item_stringvar = tk.StringVar()
 cart_item_stringvar.set(cart_items)
 
 cart_display_stringvar = tk.StringVar()
-cart_display = ""
 
 ttk.Label(root_frame,
           background="#D4FDF9",
