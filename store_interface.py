@@ -7,10 +7,11 @@ Our version of our own DBMS
 # TODO: finalize order button
 
 # create the root window
+from mysql.connector import connect
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox as msgb
-from store_backend import *
+from details import *
 
 user_login = False
 
