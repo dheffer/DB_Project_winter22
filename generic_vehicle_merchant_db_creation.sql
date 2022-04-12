@@ -30,23 +30,13 @@ quantity INT,
 FOREIGN KEY (vendor_id) REFERENCES vendor(vendor_id));
 
 CREATE TABLE orders(
-order_id INT NOT NULL PRIMARY KEY,
-quantity INT,
-customer_id INT,
-product_id INT,
-FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
-FOREIGN KEY (product_id) REFERENCES products(product_id));
-
-CREATE TABLE invoice(
-invoice_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-order_id INT NOT NULL,
+order_id INT AUTO_INCREMENT,
 time_of_sale DATE,
 customer_id INT,
-FOREIGN KEY (order_id) REFERENCES orders(order_id),
+PRIMARY KEY (order_id),
 FOREIGN KEY (customer_id) REFERENCES customer(customer_id));
 
-/* above is adding the tables to the database */
-/* below is adding data to the tables */
+select * from orders;
 
 INSERT INTO customer(cust_name, cust_email, cust_address, cust_phone, cust_license)
 VALUES ("Fred Johnson", "fjohn@hotmail.com", "17 Ridgeway Crescent", 1877643499, 159667414);
@@ -56,6 +46,66 @@ INSERT INTO customer(cust_name, cust_email, cust_address, cust_phone, cust_licen
 VALUES ("Billy Formean", "billybob123@gmail.com", "2 Sanji Avenue", 15442788, 355548641);
 INSERT INTO customer(cust_name, cust_email, cust_address, cust_phone, cust_license)
 VALUES ("Jane Way", "thejaneway@houtlook.ca", "55 Striker Crescent", 12555988, 31146686);
+insert into orders(time_of_sale, customer_id)
+values ("2022-01-03", 1);
+insert into orders(time_of_sale, customer_id)
+values ("2022-02-08", 2);
+insert into orders(time_of_sale, customer_id)
+values ("2022-02-17", 3);
+
+CREATE TABLE order_details(
+order_detail_id INT AUTO_INCREMENT,
+order_id INT NOT NULL,
+product_id INT NOT NULL,
+quantity INT,
+PRIMARY KEY (order_detail_id, order_id),
+FOREIGN KEY (order_id) REFERENCES orders(order_id),
+FOREIGN KEY (product_id) REFERENCES products(product_id));
+
+insert into order_details(order_id, product_id, quantity)
+values (2, 3, 2);
+insert into order_details(order_id, product_id, quantity)
+values (2, 4, 3);
+insert into order_details(order_id, product_id, quantity)
+values (3, 7, 1);
+insert into order_details(order_id, product_id, quantity)
+values (3, 8, 1);
+select * from order_details;
+
+CREATE TABLE invoice(
+invoice_id INT NOT NULL AUTO_INCREMENT,
+order_id INT NOT NULL,
+time_of_sale DATE,
+customer_id INT,
+PRIMARY KEY (invoice_id, order_id),
+FOREIGN KEY (customer_id) REFERENCES orders(customer_id),
+FOREIGN KEY (order_id) REFERENCES orders(order_id));
+
+insert into invoice(order_id, time_of_sale, customer_id)
+values (2, "2022-04-03", 1);
+insert into invoice(order_id, time_of_sale, customer_id)
+values (3, "2022-04-12", 3);
+
+select * from invoice;
+
+/* KEEP THIS WE NEED THIS */
+select invoice.order_id, orders.customer_id, invoice.time_of_sale, order_details.product_id, order_details.quantity
+from invoice
+inner join order_details
+	on invoice.order_id = order_details.order_id
+inner join orders
+	on invoice.customer_id = orders.customer_id;
+
+select customer.customer_id, customer.cust_name
+from customer
+inner join invoice
+ on customer.customer_id = invoice.customer_id
+where invoice.customer_id = 3;
+/* KEEP THIS WE NEED THIS */
+
+
+/* above is adding the tables to the database */
+/* below is adding data to the tables */
 
 INSERT INTO store(user_name, u_password)
 VALUES ("AA0001", "greghard0001");
@@ -93,40 +143,6 @@ VALUES ('billy jean', 'bjillaf11@gnmail.com', '155 ocol', 1441556, 111111);
 SELECT * FROM generic_vehicle_merchant.products
 WHERE quantity = 10;
 
-insert into invoice (invoice_id, order_id, time_of_sale, customer_id)
-values (1, 1, "2022-04-07", 1);
-insert into invoice (invoice_id, order_id, time_of_sale, customer_id)
-values (2, 2, "2022-03-29", 2);
-insert into invoice (invoice_id, order_id, time_of_sale, customer_id)
-values (3, 3, "2022-03-20", 3);
-insert into invoice (invoice_id, order_id, time_of_sale, customer_id)
-values (4, 4, "2022-03-11", 4);
-insert into invoice (invoice_id, order_id, time_of_sale, customer_id)
-values (5, 5, "2022-03-02", 5);
-insert into invoice (invoice_id, order_id, time_of_sale, customer_id)
-values (6, 6, "2022-02-25", 6);
-insert into invoice (invoice_id, order_id, time_of_sale, customer_id)
-values (7, 7, "2022-02-17", 7);
-insert into invoice (invoice_id, order_id, time_of_sale, customer_id)
-values (8, 8, "2022-04-01", 8);
-
-select * from invoice;
-
 SELECT  DATE_FORMAT(time_of_sale, '%m/%d/%Y')
 FROM    invoice
 WHERE   time_of_sale BETWEEN NOW() - INTERVAL 31 DAY AND NOW();
-
-select order_id, quantity, customer_id, product_id from orders;
-
-insert into orders(order_id, quantity, customer_id, product_id)
-values (1, 5, 2, 4);
-insert into orders(order_id, quantity, customer_id, product_id)
-values (2, 1, 2, 2);
-insert into orders(order_id, quantity, customer_id, product_id)
-values (3, 2, 2, 3);
-insert into orders(order_id, quantity, customer_id, product_id)
-values (4, 1, 4, 7);
-insert into orders(order_id, quantity, customer_id, product_id)
-values (5, 4, 4, 1);
-
-select * from invoice;
