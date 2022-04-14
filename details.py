@@ -1,3 +1,7 @@
+"""
+Login Details for Database
+"""
+
 from mysql.connector import connect
 
 HOST = "localhost"

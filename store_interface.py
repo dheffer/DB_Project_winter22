@@ -2,14 +2,14 @@
 This file is for creation of what the user will see
 Our version of our own DBMS
 """
-# TODO: finalize order button (needs fix)
 
 # create the root window
+from mysql.connector import connect
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox as msgb
 from details import *
-from mysql.connector import connect
+
 
 user_login = False
 
@@ -211,8 +211,45 @@ ttk.Label(root_frame,
           anchor=tk.S).grid(column=1,
                             row=10)
 
-
 # OUT_OF_STOCK_PRODUCTS ABOVE
+
+
+def get_all_products():
+    # Create connection
+    global user_login
+    if user_login:
+        with connect(host=HOST, user=USER, password=PASS) as mysql_connection_object:
+            # Create cursor
+            with mysql_connection_object.cursor() as mysql_cursor:
+                # Create SQL statement
+                update_statement = f"""USE generic_vehicle_merchant;"""
+                update_statement2 = f"""SELECT vehicle
+                                        FROM `generic_vehicle_merchant`.`products`;"""
+                # Execute the statement
+                mysql_cursor.execute(update_statement)
+                mysql_cursor.execute(update_statement2)
+                items_list = ""
+                count = 0
+                for row in mysql_cursor:
+                    count += 1
+                    items_list += f"Item: {str(row[0])}\n"
+                # Commit the change
+                mysql_connection_object.commit()
+        all_item_textvar.set(f"{items_list}")
+    elif not user_login:
+        return msgb.showwarning("ERROR!", "You must login to make changes!")
+
+
+all_item_textvar = tk.StringVar()
+all_item_textvar.set("")
+
+ttk.Button(root_frame,
+           text="SHOW ALL PRODUCTS",
+           command=get_all_products).grid(column=3,
+                                          row=9)
+ttk.Label(root_frame,
+          textvariable=all_item_textvar).grid(column=3,
+                                              row=10)
 
 
 # Get_all_products above
@@ -237,6 +274,7 @@ def update_from_vendor():
             mysql_connection_object.commit()
             msgb.showinfo("Updated", "You've ordered more product."
                                      "\nProduct Name:  " + product_name)
+
 
 
 update_quan_textvar = tk.StringVar()
@@ -268,7 +306,6 @@ ttk.Label(root_frame,
 # SHOPPING_CART SECTION BELOW
 cart_product_id = tk.StringVar()
 cart_product_id.set("")
-
 
 def add_to_cart():
     global total_value
