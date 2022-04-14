@@ -2,15 +2,14 @@
 This file is for creation of what the user will see
 Our version of our own DBMS
 """
-# TODO: shopping cart area, with add/remove features (track user id/name as well)
-# TODO: area to order parts/vehicles from vendor
-# TODO: finalize order button
+# TODO: finalize order button (needs fix)
 
 # create the root window
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox as msgb
-from store_backend import *
+from details import *
+from mysql.connector import connect
 
 user_login = False
 
@@ -184,7 +183,7 @@ def list_out_of_stock_products():
             with mysql_connection.cursor() as mysql_cursor:
                 query = f"""SELECT product_id, vehicle, cost, vendor_id, quantity
                   FROM generic_vehicle_merchant.products
-                    WHERE quantity = {10}
+                    WHERE quantity = {0}
                     """
                 # CHANGE QUANTITY TO 10 OR WHATEVER VALUE TO TEST FUNCTIONALITY
                 mysql_cursor.execute(query)
@@ -216,44 +215,6 @@ ttk.Label(root_frame,
 # OUT_OF_STOCK_PRODUCTS ABOVE
 
 
-def get_all_products():
-    # Create connection
-    global user_login
-    if user_login:
-        with connect(host=HOST, user=USER, password=PASS) as mysql_connection_object:
-            # Create cursor
-            with mysql_connection_object.cursor() as mysql_cursor:
-                # Create SQL statement
-                update_statement = f"""USE generic_vehicle_merchant;"""
-                update_statement2 = f"""SELECT vehicle
-                                        FROM `generic_vehicle_merchant`.`products`;"""
-                # Execute the statement
-                mysql_cursor.execute(update_statement)
-                mysql_cursor.execute(update_statement2)
-                items_list = ""
-                count = 0
-                for row in mysql_cursor:
-                    count += 1
-                    items_list += f"Item: {str(row[0])}\n"
-                # Commit the change
-                mysql_connection_object.commit()
-        all_item_textvar.set(f"{items_list}")
-    elif not user_login:
-        return msgb.showwarning("ERROR!", "You must login to make changes!")
-
-
-all_item_textvar = tk.StringVar()
-all_item_textvar.set("")
-
-ttk.Button(root_frame,
-           text="SHOW ALL PRODUCTS",
-           command=get_all_products).grid(column=3,
-                                          row=9)
-ttk.Label(root_frame,
-          textvariable=all_item_textvar).grid(column=3,
-                                              row=10)
-
-
 # Get_all_products above
 
 
@@ -274,6 +235,8 @@ def update_from_vendor():
             mysql_cursor.execute(update_statement2)
             # Commit the change
             mysql_connection_object.commit()
+            msgb.showinfo("Updated", "You've ordered more product."
+                                     "\nProduct Name:  " + product_name)
 
 
 update_quan_textvar = tk.StringVar()
@@ -308,26 +271,45 @@ cart_product_id.set("")
 
 
 def add_to_cart():
+    global total_value
     global cart_items
     global cart_display
+    global user_login
+    printed = False
     prod_id = int(cart_product_id.get())
     cart_quant = int(cart_quantity.get())
-    if prod_id not in cart_items.keys():
-        cart_items.update({prod_id: cart_quant})
+    if user_login:
+        with connect(host=HOST, user=USER, password=PASS) as mysql_connection_object:
+            # Create cursor
+            with mysql_connection_object.cursor() as mysql_cursor:
+                # Create SQL statement
+                update_statement = f"""USE generic_vehicle_merchant;"""
+                update_statement2 = f"""SELECT vehicle
+                                        FROM `generic_vehicle_merchant`.`products`
+                                        WHERE product_id = {prod_id};"""
+                mysql_cursor.execute(update_statement)
+                mysql_cursor.execute(update_statement2)
+                name = mysql_cursor.fetchall()
+                v_name = name[0]
+                # Commit the change
+                mysql_connection_object.commit()
+    if v_name not in cart_items.keys():
+        cart_items.update({v_name: cart_quant})
         print(f"1. {cart_items}")
-    elif prod_id in cart_items.keys():
-        update = cart_items[prod_id] + cart_quant
-        cart_items.update({prod_id: update})
+    elif v_name in cart_items.keys():
+        update = cart_items[v_name] + cart_quant
+        cart_items.update({v_name: update})
         print(f"2. {cart_items}")
     else:
         return print(f"3. {cart_items}")
 
-    # TODO: fix this for loop
-    # the issue might be that its adding to a string? maybe add to list, then
-    # convert to string
+    key_value = ""
     for keys, values in cart_items.items():
-        cart_display += f"Product ID: {keys}\t Quantity: {values}\n"
-    cart_display_stringvar.set(cart_display)
+        key = f"Product Name: {str(keys[0])}\t"
+        value = f"Quantity: {values}\n"
+        key_value += key + value
+        total_value = value
+    cart_display_stringvar.set(key_value)
 
 
 def remove_from_cart():
@@ -335,29 +317,205 @@ def remove_from_cart():
     global cart_display
     prod_id = int(cart_product_id.get())
     cart_quant = int(cart_quantity.get())
-    if prod_id not in cart_items.keys():
+    if user_login:
+        with connect(host=HOST, user=USER, password=PASS) as mysql_connection_object:
+            # Create cursor
+            with mysql_connection_object.cursor() as mysql_cursor:
+                # Create SQL statement
+                update_statement = f"""USE generic_vehicle_merchant;"""
+                update_statement2 = f"""SELECT vehicle
+                                        FROM `generic_vehicle_merchant`.`products`
+                                        WHERE product_id = {prod_id};"""
+                mysql_cursor.execute(update_statement)
+                mysql_cursor.execute(update_statement2)
+                name = mysql_cursor.fetchall()
+                v_name = name[0]
+    if v_name not in cart_items.keys():
         msgb.showwarning("ERROR", "The item isn't in your cart!")
         raise AssertionError("This item isn't in your shopping cart")
 
     # deletes item from shopping cart if quantity specified is greater than amount in cart
-    elif cart_items[prod_id] <= cart_quant:
-        cart_items.pop(prod_id)
+    elif cart_items[v_name] <= cart_quant:
+        cart_items.pop(v_name)
         print(f"4. {cart_items}")
 
     # if quantity specified is less than cart amount, subtract that amount from cart
-    elif cart_items[prod_id] > cart_quant:
-        modified = cart_items[prod_id] - cart_quant
-        cart_items.update({prod_id: modified})
+    elif cart_items[v_name] > cart_quant:
+        modified = cart_items[v_name] - cart_quant
+        cart_items.update({v_name: modified})
         print(f"5. {cart_items}")
 
-    # TODO: fix this for loop
-    # the issue might be that its adding to a string? maybe add to list, then
-    # convert to string
+    key_value = ""
     for keys, values in cart_items.items():
-        cart_display += f"Product ID: {keys}\t Quantity: {values}\n"
-    cart_display_stringvar.set(cart_display)
+        key = f"Product Name: {str(keys[0])}\t"
+        value = f"Quantity: {values}\n"
+        key_value += key + value
+    cart_display_stringvar.set(key_value)
 
 
+def get_cust_id():
+    global cust_id
+    # Create connection
+    customer_name = cart_customer.get()
+    with connect(host=HOST, user=USER, password=PASS) as mysql_connection_object:
+        # Create cursor
+        with mysql_connection_object.cursor() as mysql_cursor:
+            # Create SQL statement
+            update_statement = f"""USE generic_vehicle_merchant;"""
+            update_statement2 = f"""select customer_id from customer
+                                    where cust_name = "{customer_name}";"""
+            # Execute the statement
+            mysql_cursor.execute(update_statement)
+            mysql_cursor.execute(update_statement2)
+            cust_id = 0
+            for ids in mysql_cursor:
+                row_id = ids[0]
+                cust_id = int(row_id)
+            # Commit the change
+            msgb.showinfo("Confirmed", "Customer ID: " + str(cust_id))
+            return cust_id
+
+
+def fill_orders():
+    get_cust_id()
+    global cust_id
+    ids = cust_id
+    # Create connection
+    with connect(host=HOST, user=USER, password=PASS) as mysql_connection_object:
+        # Create cursor
+        with mysql_connection_object.cursor() as mysql_cursors:
+            update_statement = f"""USE generic_vehicle_merchant;"""
+            update_statement2 = f"""insert into orders(time_of_sale, customer_id)
+                                    values (CURRENT_DATE(), {ids});"""
+            # Execute the statement
+            mysql_cursors.execute(update_statement)
+            mysql_cursors.execute(update_statement2)
+            # Commit the change
+            mysql_connection_object.commit()
+            msgb.showinfo("Order Filled", "Your order has been processed."
+                                          "\nClick below to create an invoice!")
+    fill_order_details()
+
+
+def fill_order_details():
+    prod = cart_product_id.get()
+    quant = cart_quantity.get()
+    # Create connection
+    with connect(host=HOST, user=USER, password=PASS) as mysql_connection_object:
+        # Create cursor
+        with mysql_connection_object.cursor() as mysql_cursors:
+            update_statement = f"""USE generic_vehicle_merchant;"""
+            update_statement2 = f"""insert into order_details (order_id, product_id, quantity)
+                                    values({recent_order_id()}, {prod}, {quant});"""
+            # Execute the statement
+            mysql_cursors.execute(update_statement)
+            mysql_cursors.execute(update_statement2)
+            # Commit the change
+            mysql_connection_object.commit()
+
+
+def recent_order_id():
+    with connect(host=HOST, user=USER, password=PASS) as mysql_connection_object:
+        with mysql_connection_object.cursor() as mysql_cursor:
+            id_query = f"""select max(order_id) from generic_vehicle_merchant.orders
+                            limit 1;"""
+            mysql_cursor.execute(id_query)
+            id_value = mysql_cursor.fetchall()
+            recent_id_value = int(id_value[0][0])
+            return recent_id_value
+
+
+# ALL FUNCTIONS FOR FINALIZING INVOICE
+def get_invoice():
+    global cust_id
+    # Create connection
+    with connect(host=HOST, user=USER, password=PASS) as mysql_connection_object:
+        # Create cursor
+        with mysql_connection_object.cursor() as mysql_cursors:
+            update_statement = f"""USE generic_vehicle_merchant;"""
+            update_statement2 = f"""insert into invoice (order_id, time_of_sale, customer_id)
+                                    values({recent_order_id()}, CURRENT_DATE(), {cust_id});"""
+            # Execute the statement
+            mysql_cursors.execute(update_statement)
+            mysql_cursors.execute(update_statement2)
+            # Commit the change
+            mysql_connection_object.commit()
+
+
+def invoice_details():
+    invoice_quantity_remove()
+    get_invoice()
+    with connect(host=HOST, user=USER, password=PASS) as mysql_connection_object:
+        # Create cursor
+        with mysql_connection_object.cursor() as mysql_cursor:
+            o_id = recent_order_id()
+            # Create SQL statement
+            update_statement = f"""USE generic_vehicle_merchant;"""
+            update_statement2 = f"""select invoice.invoice_id, invoice.time_of_sale, invoice.customer_id, order_details.product_id, order_details.quantity
+                                        from invoice inner join order_details
+                                        on invoice.order_id = order_details.order_id
+                                        where order_details.order_id = {o_id};"""
+            # Execute the statement
+            mysql_cursor.execute(update_statement)
+            mysql_cursor.execute(update_statement2)
+            details = mysql_cursor.fetchall()
+            o_details = details
+            inv_id = []
+            tos = []
+            c_id = []
+            for i in o_details:
+                inv_id.append(i[0])
+                tos.append(i[1])
+                c_id.append(i[2])
+            update_statement4 = f"select cust_name from customer where customer_id = {c_id[0]}"
+            mysql_cursor.execute(update_statement4)
+            customer_name = mysql_cursor.fetchall()
+            name = f"Name: {customer_name[0][0]}"
+            cart_list = []
+            cart_values = []
+            for row in cart_items.keys():
+                cart_list.append(row[0])
+            for row in cart_items.values():
+                cart_values.append(row)
+            mysql_connection_object.commit()
+            msgb.showinfo("Invoice",
+                          f"\nInvoice Number: {inv_id[0]}\t"
+                          f"\nDate: {tos[0]}\t"
+                          f"\n{name}\t"
+                          f"\nProduct Name: {cart_list}\t"
+                          f"\nQuantity: {cart_values}")
+            inv_id.clear()
+            tos.clear()
+            c_id.clear()
+            # Commit the change
+
+
+def invoice_quantity_remove():
+    # Create connection
+    with connect(host=HOST, user=USER, password=PASS) as mysql_connection_object:
+        # Create cursor
+        with mysql_connection_object.cursor() as mysql_cursor:
+            prod = cart_product_id.get()
+            quant = cart_quantity.get()
+            # Create SQL statement
+            update_statement = f"""USE generic_vehicle_merchant;"""
+            update_statement2 = f"""UPDATE products
+                                    SET quantity = quantity - {quant}
+                                    WHERE product_id = '{prod}';"""
+            # Execute the statement
+            mysql_cursor.execute(update_statement)
+            mysql_cursor.execute(update_statement2)
+            # Commit the change
+            mysql_connection_object.commit()
+
+
+ttk.Button(root_frame,
+           text="GENERATE"
+                "\nINVOICE",
+           command=invoice_details).grid(column=4, row=13)
+
+cust_id = 0
+total_value = 0
 # ADD TO CART
 cart_items = {}
 cart_item_stringvar = tk.StringVar()
@@ -377,6 +535,15 @@ ttk.Label(root_frame,
 ttk.Entry(root_frame,
           width=15,
           textvariable=cart_product_id).grid(column=4, row=1)
+
+ttk.Label(root_frame,
+          background="#F9E3E5",
+          text="Customer: ").grid(column=3, row=3)
+cart_customer = tk.StringVar()
+ttk.Entry(root_frame,
+          width=15,
+          textvariable=cart_customer).grid(column=4, row=3)
+
 ttk.Label(root_frame,
           background="#F9E3E5",
           text="Quantity: ").grid(column=3, row=2)
@@ -386,11 +553,22 @@ ttk.Entry(root_frame,
 ttk.Button(root_frame,
            text="+",
            command=add_to_cart,
-           width=5).grid(column=4, row=3, sticky=tk.W)
+           width=5).grid(column=4, row=4, sticky=tk.W)
 ttk.Button(root_frame,
            text="-",
            command=remove_from_cart,
-           width=5).grid(column=4, row=3, sticky=tk.E)
+           width=5).grid(column=4, row=4, sticky=tk.E)
+
+ttk.Button(root_frame,
+           text="CONFIRM NAME",
+           command=get_cust_id,
+           width=20).grid(column=3, row=5, columnspan=2, sticky=tk.E)
+
+# CART COMPLETE ORDER
+ttk.Button(root_frame,
+           text="COMPLETE ORDER",
+           command=fill_orders,
+           width=18).grid(column=5, row=6, columnspan=2)
 
 # CART ITEMS LIST
 ttk.Label(root_frame,
