@@ -18,7 +18,7 @@ user_login = False
 def check_login_details():
     name = string_user_name.get()
     password = string_user_password.get()
-    if name == '1' and password == '123':
+    if name == log_name and password == log_pass:
         global user_login
         string_message.set('Successful Login')
         user_login = True

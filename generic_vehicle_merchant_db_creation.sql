@@ -86,7 +86,7 @@ VALUES ('billy jean', 'bjillaf11@gnmail.com', '155 ocol', 1441556, 111111);
 select * from customer;
 
 INSERT INTO store(user_name, u_password)
-VALUES ("AA0001", "greghard0001");
+VALUES ("administrator", "gvmadmin2022");
 select * from store;
 
 INSERT INTO vendor(vendor_name, vendor_email, vendor_phone)
